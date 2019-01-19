@@ -11,4 +11,5 @@ object APIResponse {
     data class RequestToken(val success : Boolean, val expires_at : String, val request_token : String)
     data class GetSessionId(val success :Boolean, val session_id:String)
     data class TrendingMovies(val page:Int, val results : ArrayList<Results>?)
+    data class SearchMovies(val page: Int, val total_results: Int, val total_pages:Int, val results: ArrayList<Results>?)
 }

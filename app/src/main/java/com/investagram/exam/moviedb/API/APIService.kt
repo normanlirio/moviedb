@@ -21,7 +21,9 @@ interface APIService {
     @GET("/3/authentication/token/new")
     fun getToken(@Query("api_key") apiKey:String) : Call <APIResponse.RequestToken>
 
-
     @POST("/3/authentication/session/new")
     fun getSessionId(@Query("api_key") apiKey: String, @Body map : HashMap<String,String?>?) : Call<APIResponse.GetSessionId>
+
+    @GET("/3/search/movie")
+    fun searchMovie(@Query("api_key") apiKey:String, @Query("query") query: String) : Call <APIResponse.SearchMovies>
 }

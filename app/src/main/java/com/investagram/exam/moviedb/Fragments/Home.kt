@@ -7,9 +7,12 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.Toast
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
@@ -34,8 +37,10 @@ class Home : Fragment() {
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-
+    private var newList : ArrayList<Results>? = ArrayList()
+    private var searchedList: ArrayList<Results>? = ArrayList()
     private var mListener: OnFragmentInteractionListener? = null
+    private var isSearching : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,11 +61,73 @@ class Home : Fragment() {
         val trendingMovies = TrendingMovies()
         trendingMovies.execute()
         recycler_home_items.layoutManager = GridLayoutManager(activity,2)
+        button_home_search.setOnClickListener(View.OnClickListener {
+            if(isSearching) {
+                searchedList?.clear()
+                isSearching = false
+                //Reset Search bar
+                button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_search))
+                edit_home_search.setText("")
+                val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
+                trendingMovies.notifyDataSetChanged()
+                recycler_home_items.adapter = trendingMovies
+            } else {
+                if(!edit_home_search.text.toString().equals("", true)) {
+                    isSearching = true
+                    button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_close_black))
+                    val searchMovie = SearchMovies()
+                    searchMovie.execute(edit_home_search.text.toString())
+                } else {
+                    Toast.makeText(activity, "Please enter a keyword", Toast.LENGTH_SHORT)
+                }
+
+            }
+
+        })
     }
 
+    inner class SearchMovies : AsyncTask<String,String,String>() {
+        val pd: ProgressDialog = ProgressDialog(activity)
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pd.setMessage("Loading...")
+            pd.setCancelable(false)
+            pd.show()
+        }
+        override fun doInBackground(vararg params: String): String {
+            Log.v("HOME", params[0])
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val client = retrofit?.create(APIService::class.java)
+            val searchMovies : APIResponse.SearchMovies? = client?.searchMovie(API_KEY, params[0])?.execute()?.body()
+            val iterator = searchMovies?.results?.listIterator()
+            if (iterator != null) {
+                for(movie in iterator) {
+                    searchedList?.add(movie)
+                }
+            }
+           return ""
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            pd.dismiss()
+            val searchedMovies = TrendingMoviesAdapter(activity, searchedList)
+            searchedMovies.notifyDataSetChanged()
+            Log.v("HOME","" + searchedMovies.itemCount + searchedList?.size)
+            recycler_home_items.adapter = searchedMovies
+            recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+
+            })
+        }
+
+    }
     inner class TrendingMovies : AsyncTask<String, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
-        var newList : ArrayList<Results>? = ArrayList()
+
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
@@ -70,9 +137,8 @@ class Home : Fragment() {
 
         override fun doInBackground(vararg params: String?): String {
             val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val list = retrofit?.create(APIService::class.java)
-
-            val trendingList: APIResponse.TrendingMovies? = list?.getTrendingMovies(API_KEY)?.execute()?.body()
+            val client = retrofit?.create(APIService::class.java)
+            val trendingList: APIResponse.TrendingMovies? = client?.getTrendingMovies(API_KEY)?.execute()?.body()
             val iterator = trendingList?.results?.listIterator()
             if (iterator != null) {
                 for(movie in iterator) {
@@ -88,6 +154,14 @@ class Home : Fragment() {
             pd.dismiss()
             val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
             recycler_home_items.adapter = trendingMovies
+            recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+
+            })
+
+
 
         }
 

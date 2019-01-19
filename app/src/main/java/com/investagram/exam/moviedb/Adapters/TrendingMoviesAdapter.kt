@@ -2,6 +2,7 @@ package com.investagram.exam.moviedb.Adapters
 
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,9 @@ class TrendingMoviesAdapter(private val activity: FragmentActivity?, private val
     }
 
     override fun onBindViewHolder(holder: TrendingMoviesViewHolder, position: Int) {
-        var imageBaseUrl : String = "https://image.tmdb.org/t/p/w185_and_h278_bestv2/" + mList!!.get(position).poster_path
+        var posterPath = mList!!.get(position).poster_path
+
+        var imageBaseUrl : String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + posterPath
         Glide.with(activity).load(imageBaseUrl).into(holder.ivMovie)
 
     }
