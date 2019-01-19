@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="Home"
+
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/action_wathchlist"
+        android:enabled="true"
+        android:icon="@drawable/ic_live_tv"
+        android:title="Watchlist"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/action_settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        app:showAsAction="always|withText" />
+
+
+</menu>

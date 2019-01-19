@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/relative_moviedetails_container"
+    tools:context="com.investagram.exam.moviedb.Fragments.MovieDetails">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_marginBottom="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:padding="10dp"
+                    android:id="@+id/image_moviedetails_poster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_moviedb"
+                    android:scaleType="fitXY"
+                    />
+
+                <LinearLayout
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_moviedetails_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textColor="@color/md_black_1000"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:layout_editor_absoluteX="155dp" />
+
+                    <TextView
+                        android:id="@+id/text_moviedetails_genre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ten"
+
+                        android:text="TextView"
+                        android:textColor="@color/md_black_1000" />
+
+                    <TextView
+                        android:id="@+id/text_moviedetails_popularity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ten"
+                        android:text="TextView"
+                        android:textColor="@color/md_black_1000" />
+                    <Button
+                        android:layout_marginTop="@dimen/ten"
+                        android:id="@+id/button_moviedetails_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add to Watchlist"
+                    />
+                </LinearLayout>
+
+            </LinearLayout>
+            <TextView
+                android:textColor="@color/md_black_1000"
+                android:id="@+id/text_moviedetails_tagline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:text="tagline"
+                android:textStyle="italic"
+
+                app:layout_constraintTop_toBottomOf="@+id/image_moviedetails_poster" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textStyle="bold"
+                android:text="Overview"
+                android:textAllCaps="false"
+                android:textColor="@color/md_black_1000"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/text_moviedetails_overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="lorem ipsum"
+                android:layout_marginBottom="@dimen/ten"
+                android:textColor="@color/md_black_1000"
+                />
+
+            <TextView
+                android:id="@+id/text_moviedetails_homepage"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:text="TextView"
+                android:textColor="@color/md_black_1000"
+           />
+
+        </LinearLayout>
+    </ScrollView>
+<include layout="@layout/bottom_navigation" />
+
+</RelativeLayout>

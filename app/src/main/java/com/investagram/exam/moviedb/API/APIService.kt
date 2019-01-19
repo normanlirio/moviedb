@@ -3,10 +3,7 @@ package com.investagram.exam.moviedb.API
 import com.investagram.exam.moviedb.Beans.User
 import com.investagram.exam.moviedb.Model.APIResponse
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * Created by fluxion inc on 18/01/2019.
@@ -26,4 +23,7 @@ interface APIService {
 
     @GET("/3/search/movie")
     fun searchMovie(@Query("api_key") apiKey:String, @Query("query") query: String) : Call <APIResponse.SearchMovies>
+
+    @GET("/3/movie/{movie_id}")
+    fun getMovieDetails(@Path("movie_id") movie_id:String,@Query("api_key") apiKey: String  ) : Call <APIResponse.MovieDetails>
 }

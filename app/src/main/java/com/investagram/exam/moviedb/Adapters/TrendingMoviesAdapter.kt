@@ -1,6 +1,10 @@
 package com.investagram.exam.moviedb.Adapters
 
+import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.investagram.exam.moviedb.Beans.Results
+import com.investagram.exam.moviedb.Fragments.MovieDetails
 
 import com.investagram.exam.moviedb.R
 
@@ -29,6 +34,17 @@ class TrendingMoviesAdapter(private val activity: FragmentActivity?, private val
 
         var imageBaseUrl : String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + posterPath
         Glide.with(activity).load(imageBaseUrl).into(holder.ivMovie)
+
+        holder.itemView.setOnClickListener(View.OnClickListener {
+           val fragmentManager : FragmentManager = activity!!.supportFragmentManager
+            val ft : FragmentTransaction = fragmentManager.beginTransaction()
+            val frag : Fragment = MovieDetails()
+            val bundle : Bundle = Bundle()
+            bundle.putInt("id", mList.get(position).id)
+            frag.arguments = bundle
+            ft.replace(R.id.fragment_container, frag).addToBackStack(null)
+            ft.commit()
+        })
 
     }
 

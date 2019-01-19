@@ -6,18 +6,16 @@ import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.design.internal.BottomNavigationItemView
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.util.Log
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
-import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
-import com.investagram.exam.moviedb.Beans.Results
 import com.investagram.exam.moviedb.Global.API_KEY
 import com.investagram.exam.moviedb.Global.setCustomActionbar
 import com.investagram.exam.moviedb.Global.switchFragment
@@ -25,27 +23,25 @@ import com.investagram.exam.moviedb.Model.APIResponse
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_movie_details.*
 import retrofit2.Retrofit
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [Home.OnFragmentInteractionListener] interface
+ * [MovieDetails.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [Home.newInstance] factory method to
+ * Use the [MovieDetails.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
 
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-    private var newList : ArrayList<Results>? = ArrayList()
-    private var searchedList: ArrayList<Results>? = ArrayList()
+    private var movieId: Int = 0
     private var mListener: OnFragmentInteractionListener? = null
-    private var isSearching : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,40 +54,21 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+
+        return inflater.inflate(R.layout.fragment_movie_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
-        setCustomActionbar(activity as AppCompatActivity, "")
-
-        val trendingMovies = TrendingMovies()
-        trendingMovies.execute()
-        recycler_home_items.layoutManager = GridLayoutManager(activity,2)
-        button_home_search.setOnClickListener(View.OnClickListener {
-            if(isSearching) {
-                searchedList?.clear()
-                isSearching = false
-                //Reset Search bar
-                button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_search))
-                edit_home_search.setText("")
-                val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
-                trendingMovies.notifyDataSetChanged()
-                recycler_home_items.adapter = trendingMovies
-            } else {
-                if(!edit_home_search.text.toString().equals("", true)) {
-                    isSearching = true
-                    button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_close_black))
-                    val searchMovie = SearchMovies()
-                    searchMovie.execute(edit_home_search.text.toString())
-                } else {
-                    Toast.makeText(activity, "Please enter a keyword", Toast.LENGTH_SHORT)
-                }
-
-            }
-
-        })
+        setCustomActionbar(activity as AppCompatActivity, "moviedetails")
+        val bundle: Bundle? = this.arguments
+        if (bundle != null) {
+            movieId = bundle.getInt("id")
+        }
+        relative_moviedetails_container.visibility = View.GONE
+        val movie: Movie = Movie()
+        movie.execute()
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
     }
@@ -103,49 +80,10 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         }
         return true
     }
-
-    inner class SearchMovies : AsyncTask<String,String,String>() {
+    inner class Movie : AsyncTask<String, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            pd.setMessage("Loading...")
-            pd.setCancelable(false)
-            pd.show()
-        }
-        override fun doInBackground(vararg params: String): String {
-            Log.v("HOME", params[0])
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
-            val searchMovies : APIResponse.SearchMovies? = client?.searchMovie(API_KEY, params[0])?.execute()?.body()
-            val iterator = searchMovies?.results?.listIterator()
-            if (iterator != null) {
-                for(movie in iterator) {
-                    searchedList?.add(movie)
-                }
-            }
-           return ""
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-            pd.dismiss()
-            val searchedMovies = TrendingMoviesAdapter(activity, searchedList)
-            searchedMovies.notifyDataSetChanged()
-            Log.v("HOME","" + searchedMovies.itemCount + searchedList?.size)
-            recycler_home_items.adapter = searchedMovies
-            recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-
-            })
-        }
-
-    }
-    inner class TrendingMovies : AsyncTask<String, String, String>() {
-        val pd: ProgressDialog = ProgressDialog(activity)
-
+        var genreList : String = ""
+        var movieData: APIResponse.MovieDetails? = null
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
@@ -156,13 +94,15 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         override fun doInBackground(vararg params: String?): String {
             val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val client = retrofit?.create(APIService::class.java)
-            val trendingList: APIResponse.TrendingMovies? = client?.getTrendingMovies(API_KEY)?.execute()?.body()
-            val iterator = trendingList?.results?.listIterator()
+            val movieDetails: APIResponse.MovieDetails? = client?.getMovieDetails(movieId.toString(),API_KEY)?.execute()?.body()
+            val iterator = movieDetails?.genres?.listIterator()
+
             if (iterator != null) {
-                for(movie in iterator) {
-                    newList?.add(movie)
+                for (genre in iterator) {
+                    genreList += "${genre.name}, "
                 }
             }
+            movieData = movieDetails
 
             return ""
         }
@@ -170,19 +110,18 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
-            val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
-            recycler_home_items.adapter = trendingMovies
-            recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
 
-            })
-
-
+            var imageBaseUrl : String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + movieData?.poster_path
+            Glide.with(activity).load(imageBaseUrl).into(image_moviedetails_poster)
+            text_moviedetails_title.text = movieData?.original_title
+            text_moviedetails_popularity.text = movieData?.popularity.toString()
+            text_moviedetails_tagline.text = movieData?.tagline
+            text_moviedetails_overview.text = movieData?.overview
+            text_moviedetails_homepage.text = movieData?.homepage
+            text_moviedetails_genre.text = genreList.substring(0, genreList.length-2 )
+            relative_moviedetails_container.visibility = View.VISIBLE
 
         }
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -232,11 +171,11 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment Home.
+         * @return A new instance of fragment MovieDetails.
          */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): Home {
-            val fragment = Home()
+        fun newInstance(param1: String, param2: String): MovieDetails {
+            val fragment = MovieDetails()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)
             args.putString(ARG_PARAM2, param2)

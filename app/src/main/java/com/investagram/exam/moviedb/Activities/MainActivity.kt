@@ -9,10 +9,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.widget.Toast
 import com.investagram.exam.moviedb.Fragments.Home
+import com.investagram.exam.moviedb.Fragments.MovieDetails
 
 import com.investagram.exam.moviedb.R
 
-class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener  {
+class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, MovieDetails.OnFragmentInteractionListener  {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener  {
 
     private var doubleBackToExitPressedOnce = false
     override fun onBackPressed() {
+
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
             return
