@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Moviedb</string>
+    <string name="app_name">Movie DB</string>
     <string name="moviedb_api_key_v3_auth">f0a566fd5591837f47c327d04170881c</string>
     <string name="moviedb_access_token">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmMGE1NjZmZDU1OTE4MzdmNDdjMzI3ZDA0MTcwODgxYyIsInN1YiI6IjVjNDAwOTdlYzNhMzY4MjE2MjQxM2EzNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.8yFFyCBo4n2Q8M1Hv49pnhj07n7gwxskCZpxDJL2WoA</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
