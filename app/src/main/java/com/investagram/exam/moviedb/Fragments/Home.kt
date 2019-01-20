@@ -6,7 +6,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.design.internal.BottomNavigationItemView
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -17,11 +16,9 @@ import android.widget.Toast
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
-import com.investagram.exam.moviedb.Beans.Results
-import com.investagram.exam.moviedb.Global.API_KEY
-import com.investagram.exam.moviedb.Global.setCustomActionbar
-import com.investagram.exam.moviedb.Global.switchFragment
-import com.investagram.exam.moviedb.Model.APIResponse
+import com.investagram.exam.moviedb.Model.Results
+import com.investagram.exam.moviedb.API.APIResponse
+import com.investagram.exam.moviedb.Global.*
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
@@ -99,7 +96,14 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
-            R.id.action_wathchlist -> switchFragment(context, MovieDetails())
+            R.id.action_wathchlist ->
+                if(isLoggedIn) {
+                    switchFragment(context, WatchlistFragment())
+                } else {
+                    askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to see you watchlist")
+                }
+            R.id.action_settings -> switchFragment(context, SettingsFragment())
+
         }
         return true
     }
@@ -115,7 +119,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         }
         override fun doInBackground(vararg params: String): String {
             Log.v("HOME", params[0])
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
             val client = retrofit?.create(APIService::class.java)
             val searchMovies : APIResponse.SearchMovies? = client?.searchMovie(API_KEY, params[0])?.execute()?.body()
             val iterator = searchMovies?.results?.listIterator()
@@ -154,7 +158,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         }
 
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
             val client = retrofit?.create(APIService::class.java)
             val trendingList: APIResponse.TrendingMovies? = client?.getTrendingMovies(API_KEY)?.execute()?.body()
             val iterator = trendingList?.results?.listIterator()

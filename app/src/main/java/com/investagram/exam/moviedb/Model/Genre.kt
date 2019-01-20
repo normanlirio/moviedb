@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Beans
+package com.investagram.exam.moviedb.Model
 
 /**
  * Created by Lirio on 1/19/2019.

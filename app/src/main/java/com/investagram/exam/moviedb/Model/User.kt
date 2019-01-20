@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Beans
+package com.investagram.exam.moviedb.Model
 
 /**
  * Created by fluxion inc on 18/01/2019.

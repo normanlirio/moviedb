@@ -1,7 +1,6 @@
 package com.investagram.exam.moviedb.Activities
 
 import android.app.ProgressDialog
-import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,11 +9,9 @@ import android.view.View
 import android.widget.Toast
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
-import com.investagram.exam.moviedb.Beans.User
-import com.investagram.exam.moviedb.Global.ACCOUNT_ID
-import com.investagram.exam.moviedb.Global.API_KEY
-import com.investagram.exam.moviedb.Global.SESSION_ID
-import com.investagram.exam.moviedb.Model.APIResponse
+import com.investagram.exam.moviedb.Model.User
+import com.investagram.exam.moviedb.API.APIResponse
+import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Retrofit
@@ -52,10 +49,10 @@ class LoginActivity : AppCompatActivity() {
         }
         override fun doInBackground(vararg params: String?): String? {
 
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
             val login = retrofit?.create(APIService::class.java)
             //GEt Token
-            val token :APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
+            val token : APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
 
 
             //Create Session with Login
@@ -73,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
             //Get Account details
             val accountId = login?.getAccountDetails(API_KEY, SESSION_ID!!)?.execute()?.body()
             ACCOUNT_ID = accountId?.id
+            USERNAME = accountId?.username
 
 
             return sessionId?.session_id
@@ -82,6 +80,7 @@ class LoginActivity : AppCompatActivity() {
             super.onPostExecute(result)
             progressDialog.dismiss()
             if(result != null) {
+                isLoggedIn = true
                 setResult(10)
                 finish()
             } else {

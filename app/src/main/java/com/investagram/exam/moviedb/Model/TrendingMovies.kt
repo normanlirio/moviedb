@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Beans
+package com.investagram.exam.moviedb.Model
 
 import java.util.ArrayList
 

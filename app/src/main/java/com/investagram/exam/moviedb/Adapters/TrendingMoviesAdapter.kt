@@ -6,13 +6,12 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.investagram.exam.moviedb.Beans.Results
+import com.investagram.exam.moviedb.Model.Results
 import com.investagram.exam.moviedb.Fragments.MovieDetails
 
 import com.investagram.exam.moviedb.R

@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.investagram.exam.moviedb.Fragments.SettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_marginBottom="56dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="vertical"
+            >
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/text_settings_username"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="JUAN"
+                android:textColor="@color/md_black_1000"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                />
+            <TextView
+                android:id="@+id/text_settings_login"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="LOGIN"
+                android:textColor="@color/md_black_1000"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                />
+        </LinearLayout>
+    </ScrollView>
+    <include layout="@layout/bottom_navigation" />
+</RelativeLayout>

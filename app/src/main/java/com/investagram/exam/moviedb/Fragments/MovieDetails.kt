@@ -18,7 +18,8 @@ import com.bumptech.glide.Glide
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Global.*
-import com.investagram.exam.moviedb.Model.APIResponse
+import com.investagram.exam.moviedb.API.APIResponse
+import com.investagram.exam.moviedb.Model.WatchlistMovie
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
@@ -40,6 +41,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     private var mParam1: String? = null
     private var mParam2: String? = null
     private var movieId: Int = 0
+
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +75,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         button_moviedetails_addtowatchlist.setOnClickListener(View.OnClickListener {
             if(isLoggedIn) {
-
+                val watch : Watchlist = Watchlist()
+                watch.execute()
             } else {
                 askToLoginPopup(activity as AppCompatActivity, "OOPS", "Please login to add this movie to watchlist")
             }
@@ -83,9 +86,43 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
-            R.id.action_wathchlist -> switchFragment(context, MovieDetails())
+            R.id.action_wathchlist ->  if(isLoggedIn) {
+                switchFragment(context, WatchlistFragment())
+            } else {
+                askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to see you watchlist")
+            }
+            R.id.action_settings -> switchFragment(context, SettingsFragment())
         }
         return true
+    }
+
+    inner  class Watchlist : AsyncTask<String, String, String>() {
+
+        val pd: ProgressDialog = ProgressDialog(activity)
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pd.setMessage("Loading...")
+            pd.setCancelable(false)
+            pd.show()
+        }
+        override fun doInBackground(vararg params: String?): String {
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val client = retrofit?.create(APIService::class.java)
+            val watchlistItems  = WatchlistMovie("movie", movieId, true)
+            val watchList : APIResponse.AddWatchlist? = client?.addToWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!, watchlistItems)?.execute()?.body()
+
+            return watchList!!.status_message
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            pd.dismiss()
+            if(result.equals("Success.", true)) {
+                notify(activity as AppCompatActivity, "Success!", "Added to watchlist")
+            }
+        }
+
     }
     inner class Movie : AsyncTask<String, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
@@ -99,7 +136,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
 
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
             val client = retrofit?.create(APIService::class.java)
             val movieDetails: APIResponse.MovieDetails? = client?.getMovieDetails(movieId.toString(),API_KEY)?.execute()?.body()
             val iterator = movieDetails?.genres?.listIterator()

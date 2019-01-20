@@ -1,6 +1,7 @@
 package com.investagram.exam.moviedb.Activities
 
 
+import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,10 +11,17 @@ import android.support.v4.app.FragmentManager
 import android.widget.Toast
 import com.investagram.exam.moviedb.Fragments.Home
 import com.investagram.exam.moviedb.Fragments.MovieDetails
+import com.investagram.exam.moviedb.Fragments.SettingsFragment
+import com.investagram.exam.moviedb.Fragments.WatchlistFragment
 
 import com.investagram.exam.moviedb.R
+import android.R.attr.data
 
-class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, MovieDetails.OnFragmentInteractionListener  {
+
+
+class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, MovieDetails.OnFragmentInteractionListener, WatchlistFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener
+{
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,4 +56,11 @@ class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, Mo
        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (fragment in supportFragmentManager.fragments) {
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 }

@@ -31,6 +31,7 @@ fun setCustomActionbar(activity: Activity, page :String) {
     actionBar!!.setCustomView(R.layout.custom_actionbar)
     val customActionbarItems = actionBar.customView
     val ivBack = customActionbarItems.findViewById<ImageView>(R.id.img_actionbar_back)
+    val tvLogin = customActionbarItems.findViewById<TextView>(R.id.text_actionbar_cancel)
     ivBack.visibility = View.GONE
     if(page.equals("moviedetails", true)) {
         ivBack.visibility = View.VISIBLE
@@ -38,6 +39,8 @@ fun setCustomActionbar(activity: Activity, page :String) {
     ivBack.setOnClickListener(View.OnClickListener {
         (activity as AppCompatActivity).supportFragmentManager.popBackStack()
     })
+
+    tvLogin.visibility = View.GONE
 }
 
 fun askToLoginPopup(activity: Activity, title: String, message: String) {
@@ -59,6 +62,34 @@ fun askToLoginPopup(activity: Activity, title: String, message: String) {
     btnContinue.setOnClickListener(View.OnClickListener {
         val intent: Intent = Intent(activity, LoginActivity::class.java)
         activity.startActivityForResult(intent, 10)
+        alertDialog.dismiss()
+    })
+    btnCancel.setOnClickListener(View.OnClickListener {
+        alertDialog.dismiss()
+    })
+
+
+}
+
+fun notify(activity: Activity, title: String, message: String) {
+    val dialogBuilder = AlertDialog.Builder(activity)
+    val inflater = activity.layoutInflater
+    val dialogView = inflater.inflate(R.layout.popup_layout, null)
+    dialogBuilder.setView(dialogView)
+    val tvHeader = dialogView.findViewById<TextView>(R.id.text_popup_title)
+    val tvBody = dialogView.findViewById<TextView>(R.id.text_popup_body)
+    val btnContinue = dialogView.findViewById<Button>(R.id.button_popup_continue)
+    val btnCancel = dialogView.findViewById<Button>(R.id.button_popup_cancel)
+
+    tvHeader.text = title
+    tvBody.text = message
+
+    val alertDialog = dialogBuilder.create()
+    alertDialog.show()
+    btnCancel.visibility = View.GONE
+    btnContinue.text = "CLOSE"
+    btnContinue.setOnClickListener(View.OnClickListener {
+
         alertDialog.dismiss()
     })
     btnCancel.setOnClickListener(View.OnClickListener {
