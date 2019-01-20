@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.opengl.Visibility
 import android.support.design.R.id.visible
 import android.support.v4.app.Fragment
@@ -46,6 +48,13 @@ fun setCustomActionbar(activity: Activity, page :String) {
     })
 
     tvLogin.visibility = View.GONE
+}
+
+fun isNetworkAvailable(context: Context): Boolean {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    var activeNetworkInfo: NetworkInfo? = null
+    activeNetworkInfo = cm.activeNetworkInfo
+    return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
 }
 
 fun askToLoginPopup(activity: Activity, title: String, message: String) {

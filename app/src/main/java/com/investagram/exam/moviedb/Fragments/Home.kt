@@ -3,6 +3,8 @@ package com.investagram.exam.moviedb.Fragments
 import android.app.ActionBar
 import android.app.ProgressDialog
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -62,31 +64,39 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         setCustomActionbar(activity as AppCompatActivity, "")
+        if(isNetworkAvailable(activity as AppCompatActivity)) {
+            val trendingMovies = TrendingMovies()
+            trendingMovies.execute()
+        } else {
+            notify(activity as AppCompatActivity, "OOPS!", "This app requires an internet connection")
+        }
 
-        val trendingMovies = TrendingMovies()
-        trendingMovies.execute()
         recycler_home_items.layoutManager = GridLayoutManager(activity,2)
         button_home_search.setOnClickListener(View.OnClickListener {
-            if(isSearching) {
-                searchedList?.clear()
-                isSearching = false
-                //Reset Search bar
-                button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_search))
-                edit_home_search.setText("")
-                val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
-                trendingMovies.notifyDataSetChanged()
-                recycler_home_items.adapter = trendingMovies
-            } else {
-                if(!edit_home_search.text.toString().equals("", true)) {
-                    isSearching = true
-                    button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_close_black))
-                    val searchMovie = SearchMovies()
-                    searchMovie.execute(edit_home_search.text.toString())
-                } else {
-                    Toast.makeText(activity, "Please enter a keyword", Toast.LENGTH_SHORT)
-                }
+           if(isNetworkAvailable(activity as AppCompatActivity)) {
+               if(isSearching) {
+                   searchedList?.clear()
+                   isSearching = false
+                   //Reset Search bar
+                   button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_search))
+                   edit_home_search.setText("")
+                   val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
+                   trendingMovies.notifyDataSetChanged()
+                   recycler_home_items.adapter = trendingMovies
+               } else {
+                   if(!edit_home_search.text.toString().equals("", true)) {
+                       isSearching = true
+                       button_home_search.setImageDrawable(resources.getDrawable(R.drawable.ic_close_black))
+                       val searchMovie = SearchMovies()
+                       searchMovie.execute(edit_home_search.text.toString())
+                   } else {
+                       Toast.makeText(activity, "Please enter a keyword", Toast.LENGTH_SHORT)
+                   }
 
-            }
+               }
+           } else {
+               notify(activity as AppCompatActivity, "OOPS!", "This app requires an internet connection")
+           }
 
         })
 
