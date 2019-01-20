@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -16,9 +17,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
-import com.investagram.exam.moviedb.Global.API_KEY
-import com.investagram.exam.moviedb.Global.setCustomActionbar
-import com.investagram.exam.moviedb.Global.switchFragment
+import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.Model.APIResponse
 
 import com.investagram.exam.moviedb.R
@@ -71,6 +70,14 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         movie.execute()
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
+
+        button_moviedetails_addtowatchlist.setOnClickListener(View.OnClickListener {
+            if(isLoggedIn) {
+
+            } else {
+                askToLoginPopup(activity as AppCompatActivity, "OOPS", "Please login to add this movie to watchlist")
+            }
+        })
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -119,6 +126,9 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             text_moviedetails_overview.text = movieData?.overview
             text_moviedetails_homepage.text = movieData?.homepage
             text_moviedetails_genre.text = genreList.substring(0, genreList.length-2 )
+            text_moviedetails_vote.text = "${movieData?.vote_average}/10"
+            Log.v("MOVIE", "" + movieData?.vote_average!!.toFloat())
+            rating_moviedetails_rate.rating = movieData?.vote_average!!.toFloat()
             relative_moviedetails_container.visibility = View.VISIBLE
 
         }

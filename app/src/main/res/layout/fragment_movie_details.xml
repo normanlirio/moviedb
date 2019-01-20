@@ -64,16 +64,53 @@
                         android:layout_marginTop="@dimen/ten"
                         android:text="TextView"
                         android:textColor="@color/md_black_1000" />
-                    <Button
-                        android:layout_marginTop="@dimen/ten"
-                        android:id="@+id/button_moviedetails_add"
+
+                    <TextView
+                        android:id="@+id/text_moviedetails_ratemovie"
+                        android:textColor="@color/md_black_1000"
+                        android:padding="@dimen/ten"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add to Watchlist"
-                    />
+                        android:layout_marginBottom="12dp"
+                        android:textSize="18sp"
+                        android:layout_marginTop="10dp"
+                        android:text="Rate Movie"
+                        android:drawableLeft="@drawable/ic_star"
+                        android:textStyle="italic"
+
+                        app:layout_constraintTop_toBottomOf="@+id/image_moviedetails_poster" />
                 </LinearLayout>
 
             </LinearLayout>
+            <RatingBar
+                android:id="@+id/rating_moviedetails_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:stepSize="0.1"
+                android:rating="1"
+                style="?android:attr/ratingBarStyleSmall"
+                android:numStars="10"
+                android:isIndicator="true"
+                />
+            <TextView
+                android:id="@+id/text_moviedetails_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/ten"
+                android:text="TextView"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/md_black_1000" />
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/moviedb_green"
+                android:text="ADD TO WATCHLIST"
+                android:textColor="@color/md_white_1000"
+                android:id="@+id/button_moviedetails_addtowatchlist"
+                />
             <TextView
                 android:textColor="@color/md_black_1000"
                 android:id="@+id/text_moviedetails_tagline"

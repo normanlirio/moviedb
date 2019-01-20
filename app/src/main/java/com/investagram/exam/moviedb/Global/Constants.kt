@@ -5,5 +5,4 @@ package com.investagram.exam.moviedb.Global
  */
 const val API_KEY:String = "f0a566fd5591837f47c327d04170881c"
 
-var SESSION_ID:String? = ""
 

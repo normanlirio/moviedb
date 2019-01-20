@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Beans.User
+import com.investagram.exam.moviedb.Global.ACCOUNT_ID
 import com.investagram.exam.moviedb.Global.API_KEY
 import com.investagram.exam.moviedb.Global.SESSION_ID
 import com.investagram.exam.moviedb.Model.APIResponse
@@ -68,6 +69,12 @@ class LoginActivity : AppCompatActivity() {
             val sessionId : APIResponse.GetSessionId? = login?.getSessionId(API_KEY, map)?.execute()?.body()
             Log.v("MAIN", sessionId?.session_id)
             SESSION_ID  = sessionId?.session_id
+
+            //Get Account details
+            val accountId = login?.getAccountDetails(API_KEY, SESSION_ID!!)?.execute()?.body()
+            ACCOUNT_ID = accountId?.id
+
+
             return sessionId?.session_id
         }
 
@@ -75,8 +82,7 @@ class LoginActivity : AppCompatActivity() {
             super.onPostExecute(result)
             progressDialog.dismiss()
             if(result != null) {
-                intent = Intent(this@LoginActivity, MainActivity::class.java)
-                startActivity(intent)
+                setResult(10)
                 finish()
             } else {
                 Toast.makeText(this@LoginActivity, "Invalid username or password", Toast.LENGTH_SHORT)

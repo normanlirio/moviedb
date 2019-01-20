@@ -158,6 +158,10 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
             val client = retrofit?.create(APIService::class.java)
             val trendingList: APIResponse.TrendingMovies? = client?.getTrendingMovies(API_KEY)?.execute()?.body()
             val iterator = trendingList?.results?.listIterator()
+            if(newList?.size!! > 0) {
+                newList?.clear()
+            }
+
             if (iterator != null) {
                 for(movie in iterator) {
                     newList?.add(movie)

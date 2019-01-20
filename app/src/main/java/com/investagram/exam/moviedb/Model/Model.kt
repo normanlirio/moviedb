@@ -17,4 +17,7 @@ object APIResponse {
                             val original_title:String, val overview:String, val popularity:Double, val poster_path:String, val tagline:String,
                             val vote_average:String
                             )
+    data class RateMovie(val status_code:Int, val status_message:String)
+
+    data class AccountDetails(val id:Int, val name:String, val username:String, val iso_639_1:String, val iso_3166_1:String)
 }

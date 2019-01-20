@@ -7,4 +7,7 @@
     <color name="moviedb_green">#01D277</color>
     <color name="md_white_1000">#FFFFFF</color>
     <color name="md_black_1000">#000000</color>
+    <color name="md_orange_600">#FB8C00</color>
+    <color name="md_amber_700">#FFA000</color>
+    <color name="md_red_500">#F44336</color>
 </resources>
