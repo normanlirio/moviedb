@@ -17,7 +17,7 @@ object APIResponse {
     data class SearchMovies(val page: Int, val total_results: Int, val total_pages:Int, val results: ArrayList<Results>?)
     data class MovieDetails(val adult:Boolean, val genres:ArrayList<Genre>?, val homepage:String, val id:String, val original_language:String,
                             val original_title:String, val overview:String, val popularity:Double, val poster_path:String, val tagline:String,
-                            val vote_average:String
+                            val vote_average:String, val status : String
                             )
     data class RateMovie(val status_code:Int, val status_message:String?)
 

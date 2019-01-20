@@ -31,6 +31,7 @@ import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.rating_layout.*
 import retrofit2.Retrofit
 
 /**
@@ -100,7 +101,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             switchFragment(activity as AppCompatActivity, fragment)
         })
 
-        text_moviedetails_ratemovie.setOnClickListener(View.OnClickListener {
+        linear_moviedetails_userrating.setOnClickListener(View.OnClickListener {
 
            if(isLoggedIn) {
 
@@ -224,7 +225,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             var imageBaseUrl : String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + movieData?.poster_path
             Glide.with(activity).load(imageBaseUrl).into(image_moviedetails_poster)
             text_moviedetails_title.text = movieData?.original_title
-            text_moviedetails_popularity.text = movieData?.popularity.toString()
+            text_moviedetails_status.text = movieData?.status
             text_moviedetails_tagline.text = movieData?.tagline
             text_moviedetails_overview.text = movieData?.overview
             text_moviedetails_homepage.text = movieData?.homepage
@@ -256,6 +257,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
                rate = state?.rated!!
                watchlist = state.watchlist
                isObject = true
+               Log.v("MOVIE DETAIL", "RATING : ${rate.value}")
            } catch (e: Exception) {
                val state : APIResponse.AccountStateBoolean? = client?.getAccountStateBoolean(movieId,API_KEY, SESSION_ID)?.execute()?.body()
                isObject = state?.rated!!
@@ -267,6 +269,12 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
+            if(rate is Rating){
+                rating_moviedetails_userrating.rating = rate.value.toFloat()
+            } else {
+                rating_moviedetails_userrating.rating = 0.0F
+            }
+
            disableWatchlistButton(watchlist)
         }
     }
@@ -292,7 +300,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
-
+        rbRating.rating = rating_moviedetails_userrating.rating
         btnSubmit.setOnClickListener(View.OnClickListener {
             SubmitRating().execute(rbRating.rating.toDouble())
             alertDialog.dismiss()
