@@ -8,3 +8,4 @@ var isLoggedIn : Boolean = false
 var SESSION_ID:String? = ""
 var ACCOUNT_ID:Int? = 0
 var USERNAME :String? = ""
+var GUEST_SESSION_ID: String? = ""

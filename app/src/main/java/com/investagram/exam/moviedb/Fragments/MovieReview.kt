@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import com.investagram.exam.moviedb.Global.API_KEY
 import com.investagram.exam.moviedb.Model.ReviewResults
 
 import com.investagram.exam.moviedb.R
+import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_review.*
 import retrofit2.Retrofit
 
@@ -62,6 +64,7 @@ class MovieReview : Fragment() {
             LoadReviews().execute()
         }
         recycler_moviereview_items.layoutManager = LinearLayoutManager(activity)
+
     }
 
     inner class LoadReviews : AsyncTask<String, String, String>() {

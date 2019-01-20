@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import com.investagram.exam.moviedb.Activities.LoginActivity
 import com.investagram.exam.moviedb.R
@@ -96,5 +97,5 @@ fun notify(activity: Activity, title: String, message: String) {
         alertDialog.dismiss()
     })
 
-
 }
+

@@ -1,5 +1,6 @@
 package com.investagram.exam.moviedb.API
 
+import com.investagram.exam.moviedb.Model.Rating
 import com.investagram.exam.moviedb.Model.User
 
 import com.investagram.exam.moviedb.Model.WatchlistMovie
@@ -32,8 +33,7 @@ interface APIService {
     fun getMovieDetails(@Path("movie_id") movie_id:String,@Query("api_key") apiKey: String  ) : Call <APIResponse.MovieDetails>
 
     @POST("/3/movie/{movie_id}/rating")
-    fun rateMovie(@Path("movie_id")movie_id:String, @Query("api_key") apiKey:String, @Query("session_id") session_id:String,
-                  @Query("guest_session_id") guest_session_id:String, @Body value:Double )
+    fun rateMovie(@Path("movie_id")movie_id:Int, @Query("api_key") apiKey:String, @Query("session_id") session_id:String?, @Body rating: Rating) : Call <APIResponse.RateMovie>
 
     @POST("/3/account/{account_id}/watchlist")
     fun addToWatchlist(@Path("account_id") account_id:Int, @Query("api_key") apiKey: String, @Query("session_id") session_id:String,
@@ -44,4 +44,11 @@ interface APIService {
 
     @GET("/3/movie/{movie_id}/reviews")
     fun getMovieReview(@Path("movie_id") movie_id:Int, @Query("api_key") apiKey: String) : Call<APIResponse.MovieReview>
+
+    @GET("/3/movie/{movie_id}/account_states")
+    fun getAccountState(@Path("movie_id") movie_id: Int , @Query("api_key") apiKey: String, @Query("session_id") session_id:String?) : Call <APIResponse.AccountState>
+
+    @DELETE("/3/movie/{movie_id}/rating")
+    fun deleteRating(@Path("movie_id") movie_id:Int, @Query("api_key") apiKey: String, @Query("session_id") session_id:String?) : Call<APIResponse.RateMovie>
+
 }

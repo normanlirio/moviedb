@@ -79,6 +79,7 @@
                         android:textStyle="italic"
 
                         app:layout_constraintTop_toBottomOf="@+id/image_moviedetails_poster" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -101,7 +102,40 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/md_black_1000" />
+            <LinearLayout
+                android:layout_marginBottom="10dp"
+                android:id="@+id/linear_moviedetails_userrating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+                <TextView
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/ten"
+                    android:text="Your rating"
+                    android:textColor="@color/md_black_1000" />
+                <RatingBar
+                    android:id="@+id/rating_moviedetails_userrating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:stepSize="0.1"
+                    android:rating="1"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:numStars="10"
+                    android:isIndicator="true"
+                    />
+                <TextView
+                    android:padding="10dp"
+                    android:id="@+id/text_moviedetails_removerating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/ten"
+                    android:text="Remove rating"
+                    android:textColor="@color/md_black_1000" />
+            </LinearLayout>
 
             <Button
                 android:layout_width="match_parent"
@@ -166,6 +200,11 @@
 
         </LinearLayout>
     </ScrollView>
-<include layout="@layout/bottom_navigation" />
+
+    <include
+        layout="@layout/bottom_navigation"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>

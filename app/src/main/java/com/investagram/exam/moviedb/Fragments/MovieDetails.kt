@@ -1,8 +1,11 @@
 package com.investagram.exam.moviedb.Fragments
 
 import android.app.ActionBar
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -14,16 +17,20 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.API.APIResponse
+import com.investagram.exam.moviedb.Model.Rating
 import com.investagram.exam.moviedb.Model.WatchlistMovie
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 import retrofit2.Retrofit
 
 /**
@@ -41,7 +48,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     private var mParam1: String? = null
     private var mParam2: String? = null
     private var movieId: Int = 0
-
+    var submittedRating : Double = 0.0
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,15 +74,17 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         if (bundle != null) {
             movieId = bundle.getInt("id")
         }
+
         relative_moviedetails_container.visibility = View.GONE
-        val movie: Movie = Movie()
+        val movie = Movie()
         movie.execute()
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
+
         button_moviedetails_addtowatchlist.setOnClickListener(View.OnClickListener {
             if(isLoggedIn) {
-                val watch : Watchlist = Watchlist()
+                val watch = Watchlist()
                 watch.execute()
             } else {
                 askToLoginPopup(activity as AppCompatActivity, "OOPS", "Please login to add this movie to watchlist")
@@ -90,6 +99,51 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
             switchFragment(activity as AppCompatActivity, fragment)
         })
+
+        text_moviedetails_ratemovie.setOnClickListener(View.OnClickListener {
+
+           if(isLoggedIn) {
+
+               submitRating(activity as AppCompatActivity)
+           } else {
+               askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to rate movie")
+           }
+        })
+
+        if(isLoggedIn){
+            GetUserMovieRating().execute()
+            linear_moviedetails_userrating.visibility = View.VISIBLE
+        }
+
+        text_moviedetails_removerating.setOnClickListener(View.OnClickListener {
+            DeleteRating().execute()
+        })
+    }
+
+    inner class DeleteRating : AsyncTask<String, String, String>() {
+
+        val pd: ProgressDialog = ProgressDialog(activity)
+        var message :String = ""
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pd.setMessage("Loading...")
+            pd.setCancelable(false)
+            pd.show()
+        }
+        override fun doInBackground(vararg params: String?): String {
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val client = retrofit?.create(APIService::class.java)
+            val deleteRate : APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, SESSION_ID)?.execute()?.body()
+            message = deleteRate!!.status_message!!
+           return ""
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            pd.dismiss()
+            rating_moviedetails_userrating.rating = 0.0F
+            notify(activity as AppCompatActivity, "Success!", message)
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -180,6 +234,101 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
     }
 
+    inner class GetUserMovieRating : AsyncTask<String, String, String>() {
+
+        val pd: ProgressDialog = ProgressDialog(activity)
+        var isObject = false
+        var rate = Rating()
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pd.setMessage("Loading...")
+            pd.setCancelable(false)
+            pd.show()
+        }
+        override fun doInBackground(vararg params: String?): String {
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val client = retrofit?.create(APIService::class.java)
+           try {
+               val state : APIResponse.AccountState? = client?.getAccountState(movieId,API_KEY, SESSION_ID)?.execute()?.body()
+               if(state!!.rated is Rating) {
+                   isObject = true
+                   rate = state!!.rated
+               }
+           } catch (e: Exception) {
+               isObject = false
+           }
+          return ""
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            pd.dismiss()
+
+            if(isObject) {
+                rating_moviedetails_userrating.rating = rate.value.toFloat()
+            } else {
+                rating_moviedetails_userrating.rating = 0.0F
+            }
+        }
+    }
+
+
+    fun submitRating(activity: Activity) {
+        val dialogBuilder = AlertDialog.Builder(activity)
+        val inflater = activity.layoutInflater
+        val dialogView = inflater.inflate(R.layout.rating_layout, null)
+        dialogBuilder.setView(dialogView)
+        val rbRating = dialogView.findViewById<RatingBar>(R.id.ratingBar_rate)
+        val btnSubmit = dialogView.findViewById<TextView>(R.id.button_rate_submit)
+
+        rbRating.rating = submittedRating.toFloat()
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+
+        btnSubmit.setOnClickListener(View.OnClickListener {
+            SubmitRating().execute(rbRating.rating.toDouble())
+            alertDialog.dismiss()
+        })
+
+
+    }
+
+    inner class SubmitRating : AsyncTask<Double, String, String>() {
+        val pd: ProgressDialog = ProgressDialog(activity)
+        var message :String? = ""
+        var submittedRating : Double = 0.0
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pd.setMessage("Loading...")
+            pd.setCancelable(false)
+            pd.show()
+        }
+        override fun doInBackground(vararg params: Double?): String {
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val client = retrofit?.create(APIService::class.java)
+            val rating = Rating(params[0]!!)
+            val submitRating : APIResponse.RateMovie? = client?.rateMovie(movieId, API_KEY, SESSION_ID, rating )?.execute()?.body()
+            message = submitRating?.status_message
+            submittedRating = params[0]!!
+           return ""
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            pd.dismiss()
+            rating_moviedetails_userrating.rating = submittedRating.toFloat()
+            notify(activity as AppCompatActivity, "Success!", message!!)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 10) {
+           linear_moviedetails_userrating.visibility = View.VISIBLE
+
+            GetUserMovieRating().execute()
+        }
+    }
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         if (mListener != null) {

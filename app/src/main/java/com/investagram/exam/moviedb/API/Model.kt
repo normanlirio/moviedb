@@ -1,6 +1,7 @@
 package com.investagram.exam.moviedb.API
 
 import com.investagram.exam.moviedb.Model.Genre
+import com.investagram.exam.moviedb.Model.Rating
 import com.investagram.exam.moviedb.Model.Results
 import com.investagram.exam.moviedb.Model.ReviewResults
 import java.util.ArrayList
@@ -18,9 +19,12 @@ object APIResponse {
                             val original_title:String, val overview:String, val popularity:Double, val poster_path:String, val tagline:String,
                             val vote_average:String
                             )
-    data class RateMovie(val status_code:Int, val status_message:String)
+    data class RateMovie(val status_code:Int, val status_message:String?)
 
     data class AccountDetails(val id:Int, val name:String, val username:String, val iso_639_1:String, val iso_3166_1:String)
     data class AddWatchlist(val status_code:Int, val status_message:String )
     data class MovieReview(val id:Int, val page:Int, val results:ArrayList<ReviewResults>?, val total_pages:Int, val total_results:Int)
+    data class AccountState(val id:Int, val favorite:Boolean, val rated: Rating, val watchlist:Boolean )
+
+
 }

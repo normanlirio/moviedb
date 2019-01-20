@@ -67,8 +67,8 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
            }
         })
         if(isLoggedIn) {
-            isLoggedIn = false
-            text_settings_login.text = "LOGIN"
+
+            text_settings_login.text = "LOGOUT"
             text_settings_username.text =  "Hello, $USERNAME"
             text_settings_username.visibility = View.VISIBLE
         }
