@@ -14,9 +14,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Activities.LoginActivity
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.activity_main.view.*
+import retrofit2.Retrofit
 
 /**
  * Created by Lirio on 1/20/2019.
@@ -36,6 +38,8 @@ fun setCustomActionbar(activity: Activity, page :String) {
     ivBack.visibility = View.GONE
     if(page.equals("moviedetails", true)) {
         ivBack.visibility = View.VISIBLE
+    } else {
+        ivBack.visibility = View.GONE
     }
     ivBack.setOnClickListener(View.OnClickListener {
         (activity as AppCompatActivity).supportFragmentManager.popBackStack()
@@ -99,3 +103,6 @@ fun notify(activity: Activity, title: String, message: String) {
 
 }
 
+fun retrofitClient() : Retrofit? {
+    return RetrofitClient.getClient("https://api.themoviedb.org/")
+}

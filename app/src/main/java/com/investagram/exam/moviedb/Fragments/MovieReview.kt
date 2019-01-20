@@ -18,6 +18,8 @@ import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.MovieReviewAdapter
 import com.investagram.exam.moviedb.Global.API_KEY
+import com.investagram.exam.moviedb.Global.retrofitClient
+import com.investagram.exam.moviedb.Global.setCustomActionbar
 import com.investagram.exam.moviedb.Model.ReviewResults
 
 import com.investagram.exam.moviedb.R
@@ -57,6 +59,7 @@ class MovieReview : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setCustomActionbar(activity as AppCompatActivity, "moviedetails")
         val bundle = this.arguments
         if(bundle != null) {
             movieId = bundle.getInt("movieid")
@@ -78,8 +81,7 @@ class MovieReview : Fragment() {
         }
 
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+            val client = retrofitClient()?.create(APIService::class.java)
             val review : APIResponse.MovieReview? = client?.getMovieReview(movieId, API_KEY)?.execute()?.body()
 
             Log.v("MOVIE REVIEW", "SIZE: ${review?.results?.size}")

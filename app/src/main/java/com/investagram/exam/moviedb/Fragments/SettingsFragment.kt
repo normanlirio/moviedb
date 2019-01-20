@@ -12,10 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.investagram.exam.moviedb.Activities.LoginActivity
-import com.investagram.exam.moviedb.Global.USERNAME
-import com.investagram.exam.moviedb.Global.askToLoginPopup
-import com.investagram.exam.moviedb.Global.isLoggedIn
-import com.investagram.exam.moviedb.Global.switchFragment
+import com.investagram.exam.moviedb.Global.*
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
@@ -55,6 +52,7 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setCustomActionbar(activity as AppCompatActivity, "Settings")
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         text_settings_login.setOnClickListener(View.OnClickListener {
            if(isLoggedIn) {

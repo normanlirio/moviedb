@@ -131,8 +131,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             pd.show()
         }
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+
+            val client = retrofitClient()?.create(APIService::class.java)
             val deleteRate : APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, SESSION_ID)?.execute()?.body()
             message = deleteRate!!.status_message!!
            return ""
@@ -145,6 +145,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             notify(activity as AppCompatActivity, "Success!", message)
         }
     }
+
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -170,8 +172,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             pd.show()
         }
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+
+            val client = retrofitClient()?.create(APIService::class.java)
             val watchlistItems  = WatchlistMovie("movie", movieId, true)
             val watchList : APIResponse.AddWatchlist? = client?.addToWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!, watchlistItems)?.execute()?.body()
 
@@ -182,6 +184,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             super.onPostExecute(result)
             pd.dismiss()
             if(result.equals("Success.", true)) {
+                button_moviedetails_addtowatchlist.isEnabled = false
+                button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.md_grey_700))
                 notify(activity as AppCompatActivity, "Success!", "Added to watchlist")
             }
         }
@@ -199,8 +203,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
 
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+            val client = retrofitClient()?.create(APIService::class.java)
             val movieDetails: APIResponse.MovieDetails? = client?.getMovieDetails(movieId.toString(),API_KEY)?.execute()?.body()
             val iterator = movieDetails?.genres?.listIterator()
 
@@ -239,6 +242,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         val pd: ProgressDialog = ProgressDialog(activity)
         var isObject = false
         var rate = Rating()
+        var watchlist : Boolean = false
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
@@ -246,16 +250,16 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             pd.show()
         }
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+            val client = retrofitClient()?.create(APIService::class.java)
            try {
-               val state : APIResponse.AccountState? = client?.getAccountState(movieId,API_KEY, SESSION_ID)?.execute()?.body()
-               if(state!!.rated is Rating) {
-                   isObject = true
-                   rate = state!!.rated
-               }
+               val state : APIResponse.AccountStateObject? = client?.getAccountStateObject(movieId,API_KEY, SESSION_ID)?.execute()?.body()
+               rate = state?.rated!!
+               watchlist = state.watchlist
+               isObject = true
            } catch (e: Exception) {
-               isObject = false
+               val state : APIResponse.AccountStateBoolean? = client?.getAccountStateBoolean(movieId,API_KEY, SESSION_ID)?.execute()?.body()
+               isObject = state?.rated!!
+               watchlist = state.watchlist
            }
           return ""
         }
@@ -263,15 +267,19 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
-
-            if(isObject) {
-                rating_moviedetails_userrating.rating = rate.value.toFloat()
-            } else {
-                rating_moviedetails_userrating.rating = 0.0F
-            }
+           disableWatchlistButton(watchlist)
         }
     }
 
+    fun disableWatchlistButton (watchlist : Boolean) {
+        if(watchlist) {
+            button_moviedetails_addtowatchlist.isEnabled = false
+            button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.md_grey_700))
+        } else {
+            button_moviedetails_addtowatchlist.isEnabled = true
+            button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.moviedb_green))
+        }
+    }
 
     fun submitRating(activity: Activity) {
         val dialogBuilder = AlertDialog.Builder(activity)
@@ -281,7 +289,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         val rbRating = dialogView.findViewById<RatingBar>(R.id.ratingBar_rate)
         val btnSubmit = dialogView.findViewById<TextView>(R.id.button_rate_submit)
 
-        rbRating.rating = submittedRating.toFloat()
+
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
 
@@ -304,8 +312,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             pd.show()
         }
         override fun doInBackground(vararg params: Double?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+            val client = retrofitClient()?.create(APIService::class.java)
             val rating = Rating(params[0]!!)
             val submitRating : APIResponse.RateMovie? = client?.rateMovie(movieId, API_KEY, SESSION_ID, rating )?.execute()?.body()
             message = submitRating?.status_message

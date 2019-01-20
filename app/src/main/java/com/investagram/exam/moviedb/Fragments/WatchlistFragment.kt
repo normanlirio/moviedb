@@ -7,6 +7,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.*
@@ -14,10 +15,7 @@ import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
-import com.investagram.exam.moviedb.Global.ACCOUNT_ID
-import com.investagram.exam.moviedb.Global.API_KEY
-import com.investagram.exam.moviedb.Global.SESSION_ID
-import com.investagram.exam.moviedb.Global.switchFragment
+import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.Model.Results
 
 import com.investagram.exam.moviedb.R
@@ -58,7 +56,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setCustomActionbar(activity as AppCompatActivity, "Watchlist")
         recycler_watchlist_items.layoutManager = GridLayoutManager(activity, 2)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         val loadWatchlist = LoadWatchlist()
@@ -85,8 +83,8 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
             pd.show()
         }
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
-            val client = retrofit?.create(APIService::class.java)
+
+            val client = retrofitClient()?.create(APIService::class.java)
             val items : APIResponse.TrendingMovies? = client?.getWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!)?.execute()?.body()
             val iterator = items?.results?.listIterator()
 
