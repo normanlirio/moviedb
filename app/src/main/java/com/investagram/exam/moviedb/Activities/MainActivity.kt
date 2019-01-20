@@ -9,18 +9,14 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.widget.Toast
-import com.investagram.exam.moviedb.Fragments.Home
-import com.investagram.exam.moviedb.Fragments.MovieDetails
-import com.investagram.exam.moviedb.Fragments.SettingsFragment
-import com.investagram.exam.moviedb.Fragments.WatchlistFragment
 
 import com.investagram.exam.moviedb.R
 import android.R.attr.data
-
+import com.investagram.exam.moviedb.Fragments.*
 
 
 class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, MovieDetails.OnFragmentInteractionListener, WatchlistFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener
+        SettingsFragment.OnFragmentInteractionListener, MovieReview.OnFragmentInteractionListener
 {
 
 

@@ -148,8 +148,19 @@
             <TextView
                 android:id="@+id/text_moviedetails_homepage"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
+                android:layout_height="wrap_content"
                 android:text="TextView"
+                android:textColor="@color/md_black_1000" />
+
+            <TextView
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingRight="15dp"
+                android:textSize="18sp"
+                android:id="@+id/text_moviedetails_seereviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See Reviews"
                 android:textColor="@color/md_black_1000"
            />
 

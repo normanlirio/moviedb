@@ -81,6 +81,15 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
                 askToLoginPopup(activity as AppCompatActivity, "OOPS", "Please login to add this movie to watchlist")
             }
         })
+
+        text_moviedetails_seereviews.setOnClickListener(View.OnClickListener {
+            val fragment = MovieReview()
+            val bundle = Bundle()
+            bundle.putInt("movieid", movieId)
+            fragment.arguments =bundle
+
+            switchFragment(activity as AppCompatActivity, fragment)
+        })
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -107,7 +116,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             pd.show()
         }
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val client = retrofit?.create(APIService::class.java)
             val watchlistItems  = WatchlistMovie("movie", movieId, true)
             val watchList : APIResponse.AddWatchlist? = client?.addToWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!, watchlistItems)?.execute()?.body()
@@ -136,7 +145,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
 
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val client = retrofit?.create(APIService::class.java)
             val movieDetails: APIResponse.MovieDetails? = client?.getMovieDetails(movieId.toString(),API_KEY)?.execute()?.body()
             val iterator = movieDetails?.genres?.listIterator()

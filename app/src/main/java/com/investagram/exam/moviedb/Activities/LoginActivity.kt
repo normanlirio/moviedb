@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
         }
         override fun doInBackground(vararg params: String?): String? {
 
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val login = retrofit?.create(APIService::class.java)
             //GEt Token
             val token : APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()

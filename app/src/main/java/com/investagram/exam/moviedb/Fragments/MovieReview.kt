@@ -1,14 +1,27 @@
 package com.investagram.exam.moviedb.Fragments
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import com.investagram.exam.moviedb.API.APIResponse
+import com.investagram.exam.moviedb.API.APIService
+import com.investagram.exam.moviedb.API.RetrofitClient
+import com.investagram.exam.moviedb.Adapters.MovieReviewAdapter
+import com.investagram.exam.moviedb.Global.API_KEY
+import com.investagram.exam.moviedb.Model.ReviewResults
 
 import com.investagram.exam.moviedb.R
+import kotlinx.android.synthetic.main.fragment_movie_review.*
+import retrofit2.Retrofit
 
 /**
  * A simple [Fragment] subclass.
@@ -23,7 +36,7 @@ class MovieReview : Fragment() {
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-
+    private var movieId : Int = 0
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +52,61 @@ class MovieReview : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movie_review, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val bundle = this.arguments
+        if(bundle != null) {
+            movieId = bundle.getInt("movieid")
+            Log.v("MOVIE REVIEW", "ID: $movieId")
+            LoadReviews().execute()
+        }
+        recycler_moviereview_items.layoutManager = LinearLayoutManager(activity)
+    }
+
+    inner class LoadReviews : AsyncTask<String, String, String>() {
+        val pd: ProgressDialog = ProgressDialog(activity)
+        val list : ArrayList<ReviewResults> = ArrayList()
+        override fun onPreExecute() {
+            super.onPreExecute()
+            pd.setMessage("Loading...")
+            pd.setCancelable(true)
+            pd.show()
+        }
+
+        override fun doInBackground(vararg params: String?): String {
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val client = retrofit?.create(APIService::class.java)
+            val review : APIResponse.MovieReview? = client?.getMovieReview(movieId, API_KEY)?.execute()?.body()
+
+            Log.v("MOVIE REVIEW", "SIZE: ${review?.results?.size}")
+            val iterator = review?.results?.listIterator()
+
+            if (iterator != null) {
+                for (review in iterator) {
+                    list.add(review)
+                }
+            }
+           return ""
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            pd.dismiss()
+            relative_moviereview_container.visibility = View.VISIBLE
+            if(list.size > 0) {
+                text_moviereview_noreview.visibility = View.GONE
+                val adapter : MovieReviewAdapter = MovieReviewAdapter(activity, list)
+                recycler_moviereview_items.adapter = adapter
+            } else {
+                text_moviereview_noreview.visibility = View.VISIBLE
+            }
+
+        }
+
+
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {

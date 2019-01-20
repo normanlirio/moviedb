@@ -85,7 +85,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
             pd.show()
         }
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val client = retrofit?.create(APIService::class.java)
             val items : APIResponse.TrendingMovies? = client?.getWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!)?.execute()?.body()
             val iterator = items?.results?.listIterator()

@@ -1,13 +1,40 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="gone"
+    android:id="@+id/relative_moviereview_container"
     tools:context="com.investagram.exam.moviedb.Fragments.MovieReview">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+ <ScrollView
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     >
+     <LinearLayout
+         android:padding="15dp"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical">
+        <TextView
+            android:id="@+id/text_moviereview_noreview"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:text="No reviews"
+            android:textColor="@color/md_black_1000"
+            />
 
-</FrameLayout>
+         <android.support.v7.widget.RecyclerView
+             android:id="@+id/recycler_moviereview_items"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+         </android.support.v7.widget.RecyclerView>
+     </LinearLayout>
+ </ScrollView>
+
+</RelativeLayout>

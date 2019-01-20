@@ -119,7 +119,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         }
         override fun doInBackground(vararg params: String): String {
             Log.v("HOME", params[0])
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val client = retrofit?.create(APIService::class.java)
             val searchMovies : APIResponse.SearchMovies? = client?.searchMovie(API_KEY, params[0])?.execute()?.body()
             val iterator = searchMovies?.results?.listIterator()
@@ -153,12 +153,12 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
-            pd.setCancelable(false)
+            pd.setCancelable(true)
             pd.show()
         }
 
         override fun doInBackground(vararg params: String?): String {
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/3")
+            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val client = retrofit?.create(APIService::class.java)
             val trendingList: APIResponse.TrendingMovies? = client?.getTrendingMovies(API_KEY)?.execute()?.body()
             val iterator = trendingList?.results?.listIterator()
