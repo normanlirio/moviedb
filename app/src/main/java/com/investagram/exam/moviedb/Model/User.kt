@@ -13,9 +13,4 @@ class User {
         this.password = password
         this.request_token = request_token
     }
-    constructor() {
-        username = ""
-        password = ""
-        request_token = ""
-    }
 }

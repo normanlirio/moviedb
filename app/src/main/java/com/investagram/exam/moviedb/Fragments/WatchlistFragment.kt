@@ -14,10 +14,12 @@ import android.view.*
 import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
-import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.Global.Constants.API_KEY
+import com.investagram.exam.moviedb.Global.Variables
+import com.investagram.exam.moviedb.Global.retrofitClient
+import com.investagram.exam.moviedb.Global.setCustomActionbar
+import com.investagram.exam.moviedb.Global.switchFragment
 import com.investagram.exam.moviedb.Model.Results
-
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_watchlist.*
@@ -35,7 +37,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-    val list :ArrayList<Results> = ArrayList()
+    val list: ArrayList<Results> = ArrayList()
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +64,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
             R.id.action_wathchlist -> switchFragment(context, WatchlistFragment())
             R.id.action_settings -> switchFragment(context, SettingsFragment())
@@ -80,10 +82,11 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
             pd.setCancelable(false)
             pd.show()
         }
+
         override fun doInBackground(vararg params: String?): String {
 
             val client = retrofitClient()?.create(APIService::class.java)
-            val items : APIResponse.TrendingMovies? = client?.getWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!)?.execute()?.body()
+            val items: APIResponse.TrendingMovies? = client?.getWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!)?.execute()?.body()
             val iterator = items?.results?.listIterator()
 
             if (iterator != null) {
@@ -91,7 +94,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
                     list.add(watchlist)
                 }
             }
-           return ""
+            return ""
         }
 
 
@@ -100,7 +103,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
             pd.dismiss()
             val moviesAdded = TrendingMoviesAdapter(activity, list)
             moviesAdded.notifyDataSetChanged()
-            Log.v("WATCHLIST","" + moviesAdded.itemCount + list?.size)
+            Log.v("WATCHLIST", "" + moviesAdded.itemCount + list?.size)
             recycler_watchlist_items.adapter = moviesAdded
             recycler_watchlist_items.viewTreeObserver.removeOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
@@ -110,6 +113,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
             })
         }
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         if (mListener != null) {

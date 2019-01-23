@@ -12,21 +12,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.MovieReviewAdapter
 import com.investagram.exam.moviedb.Global.Constants.API_KEY
-import com.investagram.exam.moviedb.Global.Variables
 import com.investagram.exam.moviedb.Global.retrofitClient
 import com.investagram.exam.moviedb.Global.setCustomActionbar
 import com.investagram.exam.moviedb.Model.ReviewResults
-
 import com.investagram.exam.moviedb.R
-import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_review.*
-import retrofit2.Retrofit
 
 /**
  * A simple [Fragment] subclass.
@@ -41,7 +35,7 @@ class MovieReview : Fragment() {
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-    private var movieId : Int = 0
+    private var movieId: Int = 0
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +56,7 @@ class MovieReview : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setCustomActionbar(activity as AppCompatActivity, "moviedetails")
         val bundle = this.arguments
-        if(bundle != null) {
+        if (bundle != null) {
             movieId = bundle.getInt("movieid")
             Log.v("MOVIE REVIEW", "ID: $movieId")
             LoadReviews().execute()
@@ -73,7 +67,7 @@ class MovieReview : Fragment() {
 
     inner class LoadReviews : AsyncTask<String, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
-        val list : ArrayList<ReviewResults> = ArrayList()
+        val list: ArrayList<ReviewResults> = ArrayList()
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
@@ -83,7 +77,7 @@ class MovieReview : Fragment() {
 
         override fun doInBackground(vararg params: String?): String {
             val client = retrofitClient()?.create(APIService::class.java)
-            val review : APIResponse.MovieReview? = client?.getMovieReview(movieId,API_KEY)?.execute()?.body()
+            val review: APIResponse.MovieReview? = client?.getMovieReview(movieId, API_KEY)?.execute()?.body()
 
             Log.v("MOVIE REVIEW", "SIZE: ${review?.results?.size}")
             val iterator = review?.results?.listIterator()
@@ -93,16 +87,16 @@ class MovieReview : Fragment() {
                     list.add(review)
                 }
             }
-           return ""
+            return ""
         }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
             relative_moviereview_container.visibility = View.VISIBLE
-            if(list.size > 0) {
+            if (list.size > 0) {
                 text_moviereview_noreview.visibility = View.GONE
-                val adapter : MovieReviewAdapter = MovieReviewAdapter(activity, list)
+                val adapter: MovieReviewAdapter = MovieReviewAdapter(activity, list)
                 recycler_moviereview_items.adapter = adapter
             } else {
                 text_moviereview_noreview.visibility = View.VISIBLE

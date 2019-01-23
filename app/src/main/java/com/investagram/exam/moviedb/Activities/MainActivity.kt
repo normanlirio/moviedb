@@ -3,29 +3,27 @@ package com.investagram.exam.moviedb.Activities
 
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-
-import com.investagram.exam.moviedb.R
 import com.investagram.exam.moviedb.Fragments.*
+import com.investagram.exam.moviedb.R
 
 
 class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, MovieDetails.OnFragmentInteractionListener, WatchlistFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener, MovieReview.OnFragmentInteractionListener
-{
+        SettingsFragment.OnFragmentInteractionListener, MovieReview.OnFragmentInteractionListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             val fm = supportFragmentManager
             val ft = fm.beginTransaction()
-            val fragment : Fragment = Home()
+            val fragment: Fragment = Home()
             ft.replace(R.id.fragment_container, fragment)
             ft.commit()
         }
@@ -44,10 +42,11 @@ class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, Mo
         this.doubleBackToExitPressedOnce = true
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
 
-        Handler().postDelayed( { doubleBackToExitPressedOnce = false }, 2000)
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
+
     override fun onFragmentInteraction(uri: Uri) {
-       // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

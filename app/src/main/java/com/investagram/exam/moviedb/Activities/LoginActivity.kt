@@ -7,12 +7,12 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
-import com.investagram.exam.moviedb.Model.User
-import com.investagram.exam.moviedb.API.APIResponse
-import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.Global.Constants.API_KEY
+import com.investagram.exam.moviedb.Global.Variables
+import com.investagram.exam.moviedb.Model.User
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Retrofit
@@ -23,13 +23,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        text_login_username.setText("normz1")
-        text_login_password.setText("123456")
+
         button_login_signin.setOnClickListener(View.OnClickListener {
 
             val username: String = text_login_username.text.toString()
             val password: String = text_login_password.text.toString()
-            if(!username.equals("", true) && !password.equals("", true)) {
+            if (!username.equals("", true) && !password.equals("", true)) {
                 val login = Login()
                 login.execute(username, password)
             } else {
@@ -40,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     inner class Login : AsyncTask<String, String, String>() {
-        val progressDialog : ProgressDialog = ProgressDialog(this@LoginActivity)
+        val progressDialog: ProgressDialog = ProgressDialog(this@LoginActivity)
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -48,25 +47,26 @@ class LoginActivity : AppCompatActivity() {
             progressDialog.setCancelable(true)
             progressDialog.show()
         }
+
         override fun doInBackground(vararg params: String?): String? {
 
             val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val login = retrofit?.create(APIService::class.java)
             //GEt Token
-            val token : APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
+            val token: APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
 
 
             //Create Session with Login
             var user = User(params[0], params[1], token?.request_token)
-            val requestToken : APIResponse.LoginResponse? = login?.login(API_KEY, user)?.execute()?.body()
+            val requestToken: APIResponse.LoginResponse? = login?.login(API_KEY, user)?.execute()?.body()
             Log.v("MAIN", "Request Token ${requestToken?.request_token}")
 
             //Get Session ID
-            var map : HashMap<String, String?>? = HashMap()
+            var map: HashMap<String, String?>? = HashMap()
             map?.put("request_token", requestToken?.request_token)
-            val sessionId : APIResponse.GetSessionId? = login?.getSessionId(API_KEY, map)?.execute()?.body()
+            val sessionId: APIResponse.GetSessionId? = login?.getSessionId(API_KEY, map)?.execute()?.body()
             Log.v("MAIN", sessionId?.session_id)
-            Variables.session_ID  = sessionId?.session_id
+            Variables.session_ID = sessionId?.session_id
 
             //Get Account details
             val accountId = login?.getAccountDetails(API_KEY, Variables.session_ID!!)?.execute()?.body()
@@ -80,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             progressDialog.dismiss()
-            if(result != null) {
+            if (result != null) {
                 Variables.isLoggedIn = true
                 setResult(10)
                 finish()

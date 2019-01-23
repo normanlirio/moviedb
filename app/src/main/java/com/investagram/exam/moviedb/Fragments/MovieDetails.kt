@@ -20,18 +20,17 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.Global.*
-import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.Global.Constants.API_KEY
 import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
+import com.investagram.exam.moviedb.Global.Constants.REQUEST_LOGIN
 import com.investagram.exam.moviedb.Model.Rating
 import com.investagram.exam.moviedb.Model.WatchlistMovie
-
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
-import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
@@ -69,7 +68,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar!!.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
+        (activity as AppCompatActivity).supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         setCustomActionbar(activity as AppCompatActivity, "moviedetails")
         val bundle: Bundle? = this.arguments
         if (bundle != null) {
@@ -82,8 +81,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
-        button_moviedetails_addtowatchlist.setOnClickListener(View.OnClickListener {
-            if(Variables.isLoggedIn) {
+        button_moviedetails_addtowatchlist.setOnClickListener({
+            if (Variables.isLoggedIn) {
                 val watch = Watchlist()
                 watch.execute()
             } else {
@@ -91,31 +90,31 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             }
         })
 
-        text_moviedetails_seereviews.setOnClickListener(View.OnClickListener {
+        text_moviedetails_seereviews.setOnClickListener({
             val fragment = MovieReview()
             val bundle = Bundle()
             bundle.putInt("movieid", movieId)
-            fragment.arguments =bundle
+            fragment.arguments = bundle
 
             switchFragment(activity as AppCompatActivity, fragment)
         })
 
-        linear_moviedetails_userrating.setOnClickListener(View.OnClickListener {
+        linear_moviedetails_userrating.setOnClickListener({
 
-           if(Variables.isLoggedIn) {
+            if (Variables.isLoggedIn) {
 
-               submitRating(activity as AppCompatActivity)
-           } else {
-               askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to rate movie")
-           }
+                submitRating(activity as AppCompatActivity)
+            } else {
+                askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to rate movie")
+            }
         })
 
-        if(Variables.isLoggedIn){
+        if (Variables.isLoggedIn) {
             GetUserMovieRating().execute()
             linear_moviedetails_userrating.visibility = View.VISIBLE
         }
 
-        text_moviedetails_removerating.setOnClickListener(View.OnClickListener {
+        text_moviedetails_removerating.setOnClickListener({
             DeleteRating().execute()
         })
     }
@@ -123,19 +122,20 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     inner class DeleteRating : AsyncTask<String, String, String>() {
 
         val pd: ProgressDialog = ProgressDialog(activity)
-        var message :String = ""
+        var message: String = ""
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
             pd.setCancelable(false)
             pd.show()
         }
+
         override fun doInBackground(vararg params: String?): String {
 
             val client = retrofitClient()?.create(APIService::class.java)
-            val deleteRate : APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, Variables.session_ID)?.execute()?.body()
+            val deleteRate: APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, Variables.session_ID)?.execute()?.body()
             message = deleteRate!!.status_message!!
-           return ""
+            return ""
         }
 
         override fun onPostExecute(result: String?) {
@@ -147,11 +147,10 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     }
 
 
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
-            R.id.action_wathchlist ->  if(Variables.isLoggedIn) {
+            R.id.action_wathchlist -> if (Variables.isLoggedIn) {
                 switchFragment(context, WatchlistFragment())
             } else {
                 askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to see you watchlist")
@@ -161,7 +160,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         return true
     }
 
-    inner  class Watchlist : AsyncTask<String, String, String>() {
+    inner class Watchlist : AsyncTask<String, String, String>() {
 
         val pd: ProgressDialog = ProgressDialog(activity)
 
@@ -171,11 +170,12 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             pd.setCancelable(false)
             pd.show()
         }
+
         override fun doInBackground(vararg params: String?): String {
 
             val client = retrofitClient()?.create(APIService::class.java)
-            val watchlistItems  = WatchlistMovie("movie", movieId, true)
-            val watchList : APIResponse.AddWatchlist? = client?.addToWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!, watchlistItems)?.execute()?.body()
+            val watchlistItems = WatchlistMovie("movie", movieId, true)
+            val watchList: APIResponse.AddWatchlist? = client?.addToWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!, watchlistItems)?.execute()?.body()
 
             return watchList!!.status_message
         }
@@ -183,7 +183,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
-            if(result.equals("Success.", true)) {
+            if (result.equals("Success.", true)) {
                 button_moviedetails_addtowatchlist.isEnabled = false
                 button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.md_grey_700))
                 notify(activity as AppCompatActivity, "Success!", "Added to watchlist")
@@ -191,9 +191,10 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
 
     }
+
     inner class Movie : AsyncTask<String, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
-        var genreList : String = ""
+        var genreList: String = ""
         var movieData: APIResponse.MovieDetails? = null
         override fun onPreExecute() {
             super.onPreExecute()
@@ -204,7 +205,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         override fun doInBackground(vararg params: String?): String {
             val client = retrofitClient()?.create(APIService::class.java)
-            val movieDetails: APIResponse.MovieDetails? = client?.getMovieDetails(movieId.toString(),API_KEY)?.execute()?.body()
+            val movieDetails: APIResponse.MovieDetails? = client?.getMovieDetails(movieId.toString(), API_KEY)?.execute()?.body()
             val iterator = movieDetails?.genres?.listIterator()
 
             if (iterator != null) {
@@ -221,14 +222,14 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             super.onPostExecute(result)
             pd.dismiss()
 
-            var imageBaseUrl : String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + movieData?.poster_path
+            var imageBaseUrl: String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + movieData?.poster_path
             Glide.with(activity).load(imageBaseUrl).into(image_moviedetails_poster)
             text_moviedetails_title.text = movieData?.original_title
             text_moviedetails_status.text = movieData?.status
             text_moviedetails_tagline.text = movieData?.tagline
             text_moviedetails_overview.text = movieData?.overview
             text_moviedetails_homepage.text = movieData?.homepage
-            text_moviedetails_genre.text = genreList.substring(0, genreList.length-2 )
+            text_moviedetails_genre.text = genreList.substring(0, genreList.length - 2)
             text_moviedetails_vote.text = "${movieData?.vote_average}/10"
             Log.v("MOVIE", "" + movieData?.vote_average!!.toFloat())
             rating_moviedetails_rate.rating = movieData?.vote_average!!.toFloat()
@@ -242,44 +243,45 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         val pd: ProgressDialog = ProgressDialog(activity)
         var isObject = false
         var rate = Rating()
-        var watchlist : Boolean = false
+        var watchlist: Boolean = false
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
             pd.setCancelable(false)
             pd.show()
         }
+
         override fun doInBackground(vararg params: String?): String {
             val client = retrofitClient()?.create(APIService::class.java)
-           try {
-               val state : APIResponse.AccountStateObject? = client?.getAccountStateObject(movieId,API_KEY, Variables.session_ID)?.execute()?.body()
-               rate = state?.rated!!
-               watchlist = state.watchlist
-               isObject = true
-               Log.v("MOVIE DETAIL", "RATING : ${rate.value}")
-           } catch (e: Exception) {
-               val state : APIResponse.AccountStateBoolean? = client?.getAccountStateBoolean(movieId,API_KEY, Variables.session_ID)?.execute()?.body()
-               isObject = state?.rated!!
-               watchlist = state.watchlist
-           }
-          return ""
+            try {
+                val state: APIResponse.AccountStateObject? = client?.getAccountStateObject(movieId, API_KEY, Variables.session_ID)?.execute()?.body()
+                rate = state?.rated!!
+                watchlist = state.watchlist
+                isObject = true
+                Log.v("MOVIE DETAIL", "RATING : ${rate.value}")
+            } catch (e: Exception) {
+                val state: APIResponse.AccountStateBoolean? = client?.getAccountStateBoolean(movieId, API_KEY, Variables.session_ID)?.execute()?.body()
+                isObject = state?.rated!!
+                watchlist = state.watchlist
+            }
+            return ""
         }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
-            if(rate is Rating){
+            if (rate is Rating) {
                 rating_moviedetails_userrating.rating = rate.value.toFloat()
             } else {
                 rating_moviedetails_userrating.rating = 0.0F
             }
 
-           disableWatchlistButton(watchlist)
+            disableWatchlistButton(watchlist)
         }
     }
 
-    fun disableWatchlistButton (watchlist : Boolean) {
-        if(watchlist) {
+    fun disableWatchlistButton(watchlist: Boolean) {
+        if (watchlist) {
             button_moviedetails_addtowatchlist.isEnabled = false
             button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.md_grey_700))
         } else {
@@ -310,21 +312,22 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
     inner class SubmitRating : AsyncTask<Double, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
-        var message :String? = ""
-        var submittedRating : Double = 0.0
+        var message: String? = ""
+        var submittedRating: Double = 0.0
         override fun onPreExecute() {
             super.onPreExecute()
             pd.setMessage("Loading...")
             pd.setCancelable(false)
             pd.show()
         }
+
         override fun doInBackground(vararg params: Double?): String {
             val client = retrofitClient()?.create(APIService::class.java)
             val rating = Rating(params[0]!!)
-            val submitRating : APIResponse.RateMovie? = client?.rateMovie(movieId, API_KEY, Variables.session_ID, rating )?.execute()?.body()
+            val submitRating: APIResponse.RateMovie? = client?.rateMovie(movieId, API_KEY, Variables.session_ID, rating)?.execute()?.body()
             message = submitRating?.status_message
             submittedRating = params[0]!!
-           return ""
+            return ""
         }
 
         override fun onPostExecute(result: String?) {
@@ -337,12 +340,15 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 10) {
-           linear_moviedetails_userrating.visibility = View.VISIBLE
+        if (requestCode == REQUEST_LOGIN) {
+            if(resultCode == REQUEST_LOGIN) {
+                linear_moviedetails_userrating.visibility = View.VISIBLE
 
-            GetUserMovieRating().execute()
+                GetUserMovieRating().execute()
+            }
         }
     }
+
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         if (mListener != null) {
