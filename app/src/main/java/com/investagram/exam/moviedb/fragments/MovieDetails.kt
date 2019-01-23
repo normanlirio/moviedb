@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Fragments
+package com.investagram.exam.moviedb.fragments
 
 import android.app.ActionBar
 import android.app.Activity
@@ -20,14 +20,14 @@ import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.investagram.exam.moviedb.API.APIResponse
-import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.Global.*
-import com.investagram.exam.moviedb.Global.Constants.API_KEY
-import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
-import com.investagram.exam.moviedb.Global.Constants.REQUEST_LOGIN
-import com.investagram.exam.moviedb.Model.Rating
-import com.investagram.exam.moviedb.Model.WatchlistMovie
+import com.investagram.exam.moviedb.api.APIResponse
+import com.investagram.exam.moviedb.api.APIService
+import com.investagram.exam.moviedb.global.*
+import com.investagram.exam.moviedb.global.Constants.API_KEY
+import com.investagram.exam.moviedb.global.Constants.GENERIC_TITLE_POPUP
+import com.investagram.exam.moviedb.global.Constants.REQUEST_LOGIN
+import com.investagram.exam.moviedb.model.Rating
+import com.investagram.exam.moviedb.model.WatchlistMovie
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*

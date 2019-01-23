@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Fragments
+package com.investagram.exam.moviedb.fragments
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -12,13 +12,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.investagram.exam.moviedb.API.APIResponse
-import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.Adapters.MovieReviewAdapter
-import com.investagram.exam.moviedb.Global.Constants.API_KEY
-import com.investagram.exam.moviedb.Global.retrofitClient
-import com.investagram.exam.moviedb.Global.setCustomActionbar
-import com.investagram.exam.moviedb.Model.ReviewResults
+import com.investagram.exam.moviedb.api.APIResponse
+import com.investagram.exam.moviedb.api.APIService
+import com.investagram.exam.moviedb.adapters.MovieReviewAdapter
+import com.investagram.exam.moviedb.global.Constants.API_KEY
+import com.investagram.exam.moviedb.global.retrofitClient
+import com.investagram.exam.moviedb.global.setCustomActionbar
+import com.investagram.exam.moviedb.model.ReviewResults
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.fragment_movie_review.*
 

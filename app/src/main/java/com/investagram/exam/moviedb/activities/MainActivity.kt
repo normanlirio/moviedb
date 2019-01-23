@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Activities
+package com.investagram.exam.moviedb.activities
 
 
 import android.content.Intent
@@ -8,7 +8,7 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.investagram.exam.moviedb.Fragments.*
+import com.investagram.exam.moviedb.fragments.*
 import com.investagram.exam.moviedb.R
 
 

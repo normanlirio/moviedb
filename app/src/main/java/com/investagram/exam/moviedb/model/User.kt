@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Model
+package com.investagram.exam.moviedb.model
 
 class User {
     val username :String?

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/relative_moviedetails_container"
-    tools:context="com.investagram.exam.moviedb.Fragments.MovieDetails">
+    tools:context="com.investagram.exam.moviedb.fragments.MovieDetails">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView

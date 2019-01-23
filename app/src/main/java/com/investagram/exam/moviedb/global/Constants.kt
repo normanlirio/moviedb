@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Global
+package com.investagram.exam.moviedb.global
 
 object Constants {
     const val REQUEST_LOGIN = 10

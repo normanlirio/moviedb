@@ -1,9 +1,9 @@
-package com.investagram.exam.moviedb.API
+package com.investagram.exam.moviedb.api
 
-import com.investagram.exam.moviedb.Model.Genre
-import com.investagram.exam.moviedb.Model.Rating
-import com.investagram.exam.moviedb.Model.Results
-import com.investagram.exam.moviedb.Model.ReviewResults
+import com.investagram.exam.moviedb.model.Genre
+import com.investagram.exam.moviedb.model.Rating
+import com.investagram.exam.moviedb.model.Results
+import com.investagram.exam.moviedb.model.ReviewResults
 import java.util.*
 
 object APIResponse {

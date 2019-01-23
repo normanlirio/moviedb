@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.investagram.exam.moviedb.Fragments.SettingsFragment">
+    tools:context="com.investagram.exam.moviedb.fragments.SettingsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView

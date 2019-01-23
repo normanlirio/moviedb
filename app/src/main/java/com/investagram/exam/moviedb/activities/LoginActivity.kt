@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Activities
+package com.investagram.exam.moviedb.activities
 
 import android.app.ProgressDialog
 import android.os.AsyncTask
@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import com.investagram.exam.moviedb.API.APIResponse
-import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.API.RetrofitClient
-import com.investagram.exam.moviedb.Global.Constants
-import com.investagram.exam.moviedb.Global.Constants.API_KEY
-import com.investagram.exam.moviedb.Global.Variables
-import com.investagram.exam.moviedb.Model.User
+import com.investagram.exam.moviedb.api.APIResponse
+import com.investagram.exam.moviedb.api.APIService
+import com.investagram.exam.moviedb.api.RetrofitClient
+import com.investagram.exam.moviedb.global.Constants
+import com.investagram.exam.moviedb.global.Constants.API_KEY
+import com.investagram.exam.moviedb.global.Variables
+import com.investagram.exam.moviedb.model.User
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Retrofit

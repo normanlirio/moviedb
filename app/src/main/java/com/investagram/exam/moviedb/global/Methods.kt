@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Global
+package com.investagram.exam.moviedb.global
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,9 +12,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.investagram.exam.moviedb.API.RetrofitClient
-import com.investagram.exam.moviedb.Activities.LoginActivity
-import com.investagram.exam.moviedb.Global.Constants.BASE_URL
+import com.investagram.exam.moviedb.api.RetrofitClient
+import com.investagram.exam.moviedb.activities.LoginActivity
+import com.investagram.exam.moviedb.global.Constants.BASE_URL
 import com.investagram.exam.moviedb.R
 import retrofit2.Retrofit
 

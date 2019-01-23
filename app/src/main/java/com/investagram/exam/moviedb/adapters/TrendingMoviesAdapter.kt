@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Adapters
+package com.investagram.exam.moviedb.adapters
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,8 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.investagram.exam.moviedb.Model.Results
-import com.investagram.exam.moviedb.Fragments.MovieDetails
+import com.investagram.exam.moviedb.model.Results
+import com.investagram.exam.moviedb.fragments.MovieDetails
 
 import com.investagram.exam.moviedb.R
 

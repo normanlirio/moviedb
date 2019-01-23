@@ -1,8 +1,8 @@
-package com.investagram.exam.moviedb.API
+package com.investagram.exam.moviedb.api
 
-import com.investagram.exam.moviedb.Model.Rating
-import com.investagram.exam.moviedb.Model.User
-import com.investagram.exam.moviedb.Model.WatchlistMovie
+import com.investagram.exam.moviedb.model.Rating
+import com.investagram.exam.moviedb.model.User
+import com.investagram.exam.moviedb.model.WatchlistMovie
 import retrofit2.Call
 import retrofit2.http.*
 

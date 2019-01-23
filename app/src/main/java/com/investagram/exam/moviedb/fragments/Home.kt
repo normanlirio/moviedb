@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Fragments
+package com.investagram.exam.moviedb.fragments
 
 import android.app.ActionBar
 import android.app.ProgressDialog
@@ -13,13 +13,13 @@ import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import com.investagram.exam.moviedb.API.APIResponse
-import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
-import com.investagram.exam.moviedb.Global.*
-import com.investagram.exam.moviedb.Global.Constants.API_KEY
-import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
-import com.investagram.exam.moviedb.Model.Results
+import com.investagram.exam.moviedb.api.APIResponse
+import com.investagram.exam.moviedb.api.APIService
+import com.investagram.exam.moviedb.adapters.TrendingMoviesAdapter
+import com.investagram.exam.moviedb.global.*
+import com.investagram.exam.moviedb.global.Constants.API_KEY
+import com.investagram.exam.moviedb.global.Constants.GENERIC_TITLE_POPUP
+import com.investagram.exam.moviedb.model.Results
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_home.*

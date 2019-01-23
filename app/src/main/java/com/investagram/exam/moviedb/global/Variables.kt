@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Global
+package com.investagram.exam.moviedb.global
 
 class Variables {
     companion object {

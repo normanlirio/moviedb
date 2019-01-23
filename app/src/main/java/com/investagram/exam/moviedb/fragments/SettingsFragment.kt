@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.Fragments
+package com.investagram.exam.moviedb.fragments
 
 import android.content.Context
 import android.content.Intent
@@ -12,10 +12,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.investagram.exam.moviedb.Activities.LoginActivity
-import com.investagram.exam.moviedb.Global.*
-import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
-import com.investagram.exam.moviedb.Global.Constants.REQUEST_LOGIN
+import com.investagram.exam.moviedb.activities.LoginActivity
+import com.investagram.exam.moviedb.global.*
+import com.investagram.exam.moviedb.global.Constants.GENERIC_TITLE_POPUP
+import com.investagram.exam.moviedb.global.Constants.REQUEST_LOGIN
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_settings.*

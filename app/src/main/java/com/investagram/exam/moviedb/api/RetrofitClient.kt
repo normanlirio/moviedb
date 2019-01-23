@@ -1,4 +1,4 @@
-package com.investagram.exam.moviedb.API
+package com.investagram.exam.moviedb.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
