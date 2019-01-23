@@ -103,7 +103,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
             if (Variables.isLoggedIn) {
 
-                submitRating(activity as AppCompatActivity)
+                popUpSubmitRating(activity as AppCompatActivity)
             } else {
                 askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to rate movie")
             }
@@ -119,6 +119,60 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_LOGIN) {
+            if(resultCode == REQUEST_LOGIN) {
+                linear_moviedetails_userrating.visibility = View.VISIBLE
+
+                GetUserMovieRating().execute()
+            }
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_home -> switchFragment(context, Home())
+            R.id.action_wathchlist -> if (Variables.isLoggedIn) {
+                switchFragment(context, WatchlistFragment())
+            } else {
+                askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to see you watchlist")
+            }
+            R.id.action_settings -> switchFragment(context, SettingsFragment())
+        }
+        return true
+    }
+
+    private fun disableWatchlistButton(watchlist: Boolean) {
+        if (watchlist) {
+            button_moviedetails_addtowatchlist.isEnabled = false
+            button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.md_grey_700))
+        } else {
+            button_moviedetails_addtowatchlist.isEnabled = true
+            button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.moviedb_green))
+        }
+    }
+
+    private fun popUpSubmitRating(activity: Activity) {
+        val dialogBuilder = AlertDialog.Builder(activity)
+        val inflater = activity.layoutInflater
+        val dialogView = inflater.inflate(R.layout.rating_layout, null)
+        dialogBuilder.setView(dialogView)
+        val rbRating = dialogView.findViewById<RatingBar>(R.id.ratingBar_rate)
+        val btnSubmit = dialogView.findViewById<TextView>(R.id.button_rate_submit)
+
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        rbRating.rating = rating_moviedetails_userrating.rating
+        btnSubmit.setOnClickListener(View.OnClickListener {
+            SubmitRating().execute(rbRating.rating.toDouble())
+            alertDialog.dismiss()
+        })
+    }
+
+
+    //Asynctasks
     inner class DeleteRating : AsyncTask<String, String, String>() {
 
         val pd: ProgressDialog = ProgressDialog(activity)
@@ -146,19 +200,6 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
     }
 
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_home -> switchFragment(context, Home())
-            R.id.action_wathchlist -> if (Variables.isLoggedIn) {
-                switchFragment(context, WatchlistFragment())
-            } else {
-                askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to see you watchlist")
-            }
-            R.id.action_settings -> switchFragment(context, SettingsFragment())
-        }
-        return true
-    }
 
     inner class Watchlist : AsyncTask<String, String, String>() {
 
@@ -280,36 +321,6 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
     }
 
-    fun disableWatchlistButton(watchlist: Boolean) {
-        if (watchlist) {
-            button_moviedetails_addtowatchlist.isEnabled = false
-            button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.md_grey_700))
-        } else {
-            button_moviedetails_addtowatchlist.isEnabled = true
-            button_moviedetails_addtowatchlist.setBackgroundColor(resources.getColor(R.color.moviedb_green))
-        }
-    }
-
-    fun submitRating(activity: Activity) {
-        val dialogBuilder = AlertDialog.Builder(activity)
-        val inflater = activity.layoutInflater
-        val dialogView = inflater.inflate(R.layout.rating_layout, null)
-        dialogBuilder.setView(dialogView)
-        val rbRating = dialogView.findViewById<RatingBar>(R.id.ratingBar_rate)
-        val btnSubmit = dialogView.findViewById<TextView>(R.id.button_rate_submit)
-
-
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
-        rbRating.rating = rating_moviedetails_userrating.rating
-        btnSubmit.setOnClickListener(View.OnClickListener {
-            SubmitRating().execute(rbRating.rating.toDouble())
-            alertDialog.dismiss()
-        })
-
-
-    }
-
     inner class SubmitRating : AsyncTask<Double, String, String>() {
         val pd: ProgressDialog = ProgressDialog(activity)
         var message: String? = ""
@@ -338,16 +349,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_LOGIN) {
-            if(resultCode == REQUEST_LOGIN) {
-                linear_moviedetails_userrating.visibility = View.VISIBLE
 
-                GetUserMovieRating().execute()
-            }
-        }
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
@@ -408,4 +410,4 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             return fragment
         }
     }
-}// Required empty public constructor
+}
