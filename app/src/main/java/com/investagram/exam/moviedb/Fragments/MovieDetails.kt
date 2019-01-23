@@ -32,18 +32,8 @@ import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [MovieDetails.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [MovieDetails.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-
-    // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
     private var movieId: Int = 0
@@ -61,8 +51,6 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_movie_details, container, false)
     }
 
@@ -81,42 +69,40 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
-        button_moviedetails_addtowatchlist.setOnClickListener({
+        button_moviedetails_addtowatchlist.setOnClickListener {
             if (Variables.isLoggedIn) {
                 val watch = Watchlist()
                 watch.execute()
             } else {
                 askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to add this movie to watchlist")
             }
-        })
+        }
 
-        text_moviedetails_seereviews.setOnClickListener({
+        text_moviedetails_seereviews.setOnClickListener {
             val fragment = MovieReview()
             val bundle = Bundle()
             bundle.putInt("movieid", movieId)
             fragment.arguments = bundle
 
             switchFragment(activity as AppCompatActivity, fragment)
-        })
+        }
 
-        linear_moviedetails_userrating.setOnClickListener({
-
+        linear_moviedetails_userrating.setOnClickListener {
             if (Variables.isLoggedIn) {
-
                 popUpSubmitRating(activity as AppCompatActivity)
             } else {
                 askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to rate movie")
             }
-        })
+        }
 
         if (Variables.isLoggedIn) {
             GetUserMovieRating().execute()
             linear_moviedetails_userrating.visibility = View.VISIBLE
         }
 
-        text_moviedetails_removerating.setOnClickListener({
+        text_moviedetails_removerating.setOnClickListener {
             DeleteRating().execute()
-        })
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -165,16 +151,14 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
         rbRating.rating = rating_moviedetails_userrating.rating
-        btnSubmit.setOnClickListener(View.OnClickListener {
+        btnSubmit.setOnClickListener {
             SubmitRating().execute(rbRating.rating.toDouble())
             alertDialog.dismiss()
-        })
+        }
     }
 
 
-    //Asynctasks
     inner class DeleteRating : AsyncTask<String, String, String>() {
-
         val pd: ProgressDialog = ProgressDialog(activity)
         var message: String = ""
         override fun onPreExecute() {
@@ -185,7 +169,6 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
 
         override fun doInBackground(vararg params: String?): String {
-
             val client = retrofitClient()?.create(APIService::class.java)
             val deleteRate: APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, Variables.session_ID)?.execute()?.body()
             message = deleteRate!!.status_message!!
@@ -213,11 +196,9 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
 
         override fun doInBackground(vararg params: String?): String {
-
             val client = retrofitClient()?.create(APIService::class.java)
             val watchlistItems = WatchlistMovie("movie", movieId, true)
             val watchList: APIResponse.AddWatchlist? = client?.addToWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!, watchlistItems)?.execute()?.body()
-
             return watchList!!.status_message
         }
 
@@ -263,7 +244,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
             super.onPostExecute(result)
             pd.dismiss()
 
-            var imageBaseUrl: String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + movieData?.poster_path
+            var imageBaseUrl: String = Constants.IMAGE_BASE_URL + movieData?.poster_path
             Glide.with(activity).load(imageBaseUrl).into(image_moviedetails_poster)
             text_moviedetails_title.text = movieData?.original_title
             text_moviedetails_status.text = movieData?.status
@@ -349,15 +330,6 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         }
     }
 
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
-    }
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
@@ -372,42 +344,12 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         mListener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
-     */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
         private val ARG_PARAM1 = "param1"
         private val ARG_PARAM2 = "param2"
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MovieDetails.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): MovieDetails {
-            val fragment = MovieDetails()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

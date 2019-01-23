@@ -5,11 +5,11 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
+import com.investagram.exam.moviedb.Global.Constants
 import com.investagram.exam.moviedb.Global.Constants.API_KEY
 import com.investagram.exam.moviedb.Global.Variables
 import com.investagram.exam.moviedb.Model.User
@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
 
-        button_login_signin.setOnClickListener({
+        button_login_signin.setOnClickListener {
 
             val username: String = text_login_username.text.toString()
             val password: String = text_login_password.text.toString()
@@ -32,10 +32,10 @@ class LoginActivity : AppCompatActivity() {
                 val login = Login()
                 login.execute(username, password)
             } else {
-               Log.v("LOGIN", "User cancelled the operation.")
+                Log.v("LOGIN", "User cancelled the operation.")
             }
 
-        })
+        }
     }
 
     inner class Login : AsyncTask<String, String, String>() {
@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg params: String?): String? {
 
-            val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
+            val retrofit: Retrofit? = RetrofitClient.getClient(Constants.BASE_URL)
             val login = retrofit?.create(APIService::class.java)
             //Get Token
             val token: APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()

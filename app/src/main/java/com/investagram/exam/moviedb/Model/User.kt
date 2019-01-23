@@ -1,8 +1,5 @@
 package com.investagram.exam.moviedb.Model
 
-/**
- * Created by fluxion inc on 18/01/2019.
- */
 class User {
     val username :String?
     val password: String?

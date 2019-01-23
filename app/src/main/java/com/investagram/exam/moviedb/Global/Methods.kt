@@ -18,9 +18,6 @@ import com.investagram.exam.moviedb.Global.Constants.BASE_URL
 import com.investagram.exam.moviedb.R
 import retrofit2.Retrofit
 
-/**
- * Created by Lirio on 1/20/2019.
- */
 fun switchFragment(activity: Context?, fragment: Fragment) {
     val ft = (activity as AppCompatActivity).supportFragmentManager.beginTransaction()
     ft.replace(R.id.fragment_container, fragment).addToBackStack(null)
@@ -38,16 +35,16 @@ fun setCustomActionbar(activity: Activity, page: String) {
     } else {
         ivBack.visibility = View.GONE
     }
-    ivBack.setOnClickListener(View.OnClickListener {
+    ivBack.setOnClickListener {
         activity.supportFragmentManager.popBackStack()
-    })
+    }
 
 
 }
 
 fun isNetworkAvailable(context: Context): Boolean {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    var activeNetworkInfo: NetworkInfo? = null
+    val activeNetworkInfo: NetworkInfo?
     activeNetworkInfo = cm.activeNetworkInfo
     return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
 }
@@ -68,14 +65,14 @@ fun askToLoginPopup(activity: Activity, title: String, message: String) {
     val alertDialog = dialogBuilder.create()
     alertDialog.show()
 
-    btnContinue.setOnClickListener({
-        val intent: Intent = Intent(activity, LoginActivity::class.java)
+    btnContinue.setOnClickListener {
+        val intent = Intent(activity, LoginActivity::class.java)
         activity.startActivityForResult(intent, 10)
         alertDialog.dismiss()
-    })
-    btnCancel.setOnClickListener({
+    }
+    btnCancel.setOnClickListener {
         alertDialog.dismiss()
-    })
+    }
 
 
 }
@@ -97,14 +94,12 @@ fun notify(activity: Activity, title: String, message: String) {
     alertDialog.show()
     btnCancel.visibility = View.GONE
     btnContinue.text = "CLOSE"
-    btnContinue.setOnClickListener({
-
+    btnContinue.setOnClickListener {
         alertDialog.dismiss()
-    })
-    btnCancel.setOnClickListener({
+    }
+    btnCancel.setOnClickListener {
         alertDialog.dismiss()
-    })
-
+    }
 }
 
 fun retrofitClient(): Retrofit? {

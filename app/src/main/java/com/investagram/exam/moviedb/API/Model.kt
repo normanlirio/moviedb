@@ -6,9 +6,6 @@ import com.investagram.exam.moviedb.Model.Results
 import com.investagram.exam.moviedb.Model.ReviewResults
 import java.util.*
 
-/**
- * Created by fluxion inc on 18/01/2019.
- */
 object APIResponse {
 
     data class LoginResponse(val success: Boolean, val expires_at: String, val request_token: String)
