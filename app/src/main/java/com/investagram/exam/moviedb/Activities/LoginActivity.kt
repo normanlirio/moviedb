@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
 
-        button_login_signin.setOnClickListener(View.OnClickListener {
+        button_login_signin.setOnClickListener({
 
             val username: String = text_login_username.text.toString()
             val password: String = text_login_password.text.toString()
@@ -32,14 +32,14 @@ class LoginActivity : AppCompatActivity() {
                 val login = Login()
                 login.execute(username, password)
             } else {
-                Toast.makeText(this@LoginActivity, "Username and Password are required", Toast.LENGTH_SHORT)
+               Log.v("LOGIN", "User cancelled the operation.")
             }
 
         })
     }
 
     inner class Login : AsyncTask<String, String, String>() {
-        val progressDialog: ProgressDialog = ProgressDialog(this@LoginActivity)
+        private val progressDialog: ProgressDialog = ProgressDialog(this@LoginActivity)
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
 
             val retrofit: Retrofit? = RetrofitClient.getClient("https://api.themoviedb.org/")
             val login = retrofit?.create(APIService::class.java)
-            //GEt Token
+            //Get Token
             val token: APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
 
 

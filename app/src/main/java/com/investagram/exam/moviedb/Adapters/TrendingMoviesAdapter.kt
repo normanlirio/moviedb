@@ -29,17 +29,17 @@ class TrendingMoviesAdapter(private val activity: FragmentActivity?, private val
     }
 
     override fun onBindViewHolder(holder: TrendingMoviesViewHolder, position: Int) {
-        var posterPath = mList!!.get(position).poster_path
+        var posterPath = mList!![position].poster_path
 
-        var imageBaseUrl : String = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/" + posterPath
+        var imageBaseUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/$posterPath"
         Glide.with(activity).load(imageBaseUrl).into(holder.ivMovie)
 
-        holder.itemView.setOnClickListener(View.OnClickListener {
+        holder.itemView.setOnClickListener({
            val fragmentManager : FragmentManager = activity!!.supportFragmentManager
             val ft : FragmentTransaction = fragmentManager.beginTransaction()
             val frag : Fragment = MovieDetails()
-            val bundle : Bundle = Bundle()
-            bundle.putInt("id", mList.get(position).id)
+            val bundle = Bundle()
+            bundle.putInt("id", mList[position].id)
             frag.arguments = bundle
             ft.replace(R.id.fragment_container, frag).addToBackStack(null)
             ft.commit()
@@ -52,6 +52,6 @@ class TrendingMoviesAdapter(private val activity: FragmentActivity?, private val
     }
 
     inner class TrendingMoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivMovie = itemView.findViewById<ImageView>(R.id.image_items_trending_movie)
+        val ivMovie: ImageView = itemView.findViewById<ImageView>(R.id.image_items_trending_movie)
     }
 }

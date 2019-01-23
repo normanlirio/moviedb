@@ -24,13 +24,13 @@ class MovieReviewAdapter(private val activity: FragmentActivity?, private val mL
     }
 
     override fun onBindViewHolder(holder: MovieReviewViewHolder, position: Int) {
-        holder.tvContent.text = mList!!.get(position).content
-        holder.tvAuthor.text = mList!!.get(position).author
+        holder.tvContent.text = mList!![position].content
+        holder.tvAuthor.text = mList[position].author
     }
 
     class MovieReviewViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-            val tvContent = itemView!!.findViewById<TextView>(R.id.text_review_item_content)
-            val tvAuthor = itemView!!.findViewById<TextView>(R.id.ext_review_item_author)
+            val tvContent: TextView = itemView!!.findViewById<TextView>(R.id.text_review_item_content)
+            val tvAuthor: TextView = itemView!!.findViewById<TextView>(R.id.ext_review_item_author)
     }
 
 }

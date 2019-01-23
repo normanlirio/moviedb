@@ -96,7 +96,7 @@ class MovieReview : Fragment() {
             relative_moviereview_container.visibility = View.VISIBLE
             if (list.size > 0) {
                 text_moviereview_noreview.visibility = View.GONE
-                val adapter: MovieReviewAdapter = MovieReviewAdapter(activity, list)
+                val adapter = MovieReviewAdapter(activity, list)
                 recycler_moviereview_items.adapter = adapter
             } else {
                 text_moviereview_noreview.visibility = View.VISIBLE

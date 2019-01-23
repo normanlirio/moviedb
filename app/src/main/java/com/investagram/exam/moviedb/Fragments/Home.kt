@@ -69,7 +69,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         }
 
         recycler_home_items.layoutManager = GridLayoutManager(activity, 2)
-        button_home_search.setOnClickListener(View.OnClickListener {
+        button_home_search.setOnClickListener({
             if (isNetworkAvailable(activity as AppCompatActivity)) {
                 if (isSearching) {
                     searchedList?.clear()
@@ -116,7 +116,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
     }
 
     inner class SearchMovies : AsyncTask<String, String, String>() {
-        val pd: ProgressDialog = ProgressDialog(activity)
+        private val pd: ProgressDialog = ProgressDialog(activity)
 
         override fun onPreExecute() {
             super.onPreExecute()
@@ -156,7 +156,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
     }
 
     inner class TrendingMovies : AsyncTask<String, String, String>() {
-        val pd: ProgressDialog = ProgressDialog(activity)
+        private val pd: ProgressDialog = ProgressDialog(activity)
 
         override fun onPreExecute() {
             super.onPreExecute()
