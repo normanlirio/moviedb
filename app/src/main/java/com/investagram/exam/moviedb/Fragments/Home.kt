@@ -21,6 +21,8 @@ import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
 import com.investagram.exam.moviedb.Model.Results
 import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.Global.*
+import com.investagram.exam.moviedb.Global.Constants.API_KEY
+import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
@@ -68,7 +70,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
             val trendingMovies = TrendingMovies()
             trendingMovies.execute()
         } else {
-            notify(activity as AppCompatActivity, "OOPS!", "This app requires an internet connection")
+            notify(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "This app requires an internet connection")
         }
 
         recycler_home_items.layoutManager = GridLayoutManager(activity,2)
@@ -107,10 +109,10 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         when(item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
             R.id.action_wathchlist ->
-                if(isLoggedIn) {
+                if(Variables.isLoggedIn) {
                     switchFragment(context, WatchlistFragment())
                 } else {
-                    askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to see you watchlist")
+                    askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to see you watchlist")
                 }
             R.id.action_settings -> switchFragment(context, SettingsFragment())
 
@@ -187,7 +189,7 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             pd.dismiss()
-            val trendingMovies : TrendingMoviesAdapter = TrendingMoviesAdapter(activity, newList)
+            val trendingMovies = TrendingMoviesAdapter(activity, newList)
             recycler_home_items.adapter = trendingMovies
             recycler_home_items.viewTreeObserver.removeOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {

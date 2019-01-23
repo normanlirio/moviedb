@@ -7,11 +7,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.widget.Toast
 
 import com.investagram.exam.moviedb.R
-import android.R.attr.data
 import com.investagram.exam.moviedb.Fragments.*
 
 
@@ -46,7 +44,7 @@ class MainActivity : AppCompatActivity(), Home.OnFragmentInteractionListener, Mo
         this.doubleBackToExitPressedOnce = true
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
 
-        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+        Handler().postDelayed( { doubleBackToExitPressedOnce = false }, 2000)
     }
     override fun onFragmentInteraction(uri: Uri) {
        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

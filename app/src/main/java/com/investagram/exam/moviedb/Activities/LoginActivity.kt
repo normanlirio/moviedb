@@ -12,6 +12,7 @@ import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Model.User
 import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.Global.*
+import com.investagram.exam.moviedb.Global.Constants.API_KEY
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Retrofit
@@ -65,12 +66,12 @@ class LoginActivity : AppCompatActivity() {
             map?.put("request_token", requestToken?.request_token)
             val sessionId : APIResponse.GetSessionId? = login?.getSessionId(API_KEY, map)?.execute()?.body()
             Log.v("MAIN", sessionId?.session_id)
-            SESSION_ID  = sessionId?.session_id
+            Variables.session_ID  = sessionId?.session_id
 
             //Get Account details
-            val accountId = login?.getAccountDetails(API_KEY, SESSION_ID!!)?.execute()?.body()
-            ACCOUNT_ID = accountId?.id
-            USERNAME = accountId?.username
+            val accountId = login?.getAccountDetails(API_KEY, Variables.session_ID!!)?.execute()?.body()
+            Variables.account_ID = accountId?.id
+            Variables.login_username = accountId?.username
 
 
             return sessionId?.session_id
@@ -80,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
             super.onPostExecute(result)
             progressDialog.dismiss()
             if(result != null) {
-                isLoggedIn = true
+                Variables.isLoggedIn = true
                 setResult(10)
                 finish()
             } else {

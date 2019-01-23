@@ -13,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.investagram.exam.moviedb.Activities.LoginActivity
 import com.investagram.exam.moviedb.Global.*
+import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
+import com.investagram.exam.moviedb.Global.Constants.REQUEST_LOGIN
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
@@ -32,7 +34,7 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-    private  val REQUEST_LOGIN = 10
+
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -55,8 +57,8 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         setCustomActionbar(activity as AppCompatActivity, "Settings")
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         text_settings_login.setOnClickListener(View.OnClickListener {
-           if(isLoggedIn) {
-               isLoggedIn = false
+           if(Variables.isLoggedIn) {
+               Variables.isLoggedIn = false
                text_settings_login.text = "LOGIN"
                text_settings_username.visibility = View.GONE
             } else {
@@ -64,10 +66,10 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
                activity!!.startActivityForResult(intent, REQUEST_LOGIN)
            }
         })
-        if(isLoggedIn) {
+        if(Variables.isLoggedIn) {
 
             text_settings_login.text = "LOGOUT"
-            text_settings_username.text =  "Hello, $USERNAME"
+            text_settings_username.text =  "Hello, $Variables.login_username"
             text_settings_username.visibility = View.VISIBLE
         }
     }
@@ -76,7 +78,7 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REQUEST_LOGIN) {
             text_settings_login.text = "LOGOUT"
-            text_settings_username.text = "Hello, $USERNAME"
+            text_settings_username.text = "Hello, $Variables.login_username"
             text_settings_username.visibility = View.VISIBLE
         }
     }
@@ -84,10 +86,10 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         when(item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
             R.id.action_wathchlist ->
-                if(isLoggedIn) {
+                if(Variables.isLoggedIn) {
                     switchFragment(context, WatchlistFragment())
                 } else {
-                    askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to see you watchlist")
+                    askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to see you watchlist")
                 }
             R.id.action_settings -> switchFragment(context, SettingsFragment())
 

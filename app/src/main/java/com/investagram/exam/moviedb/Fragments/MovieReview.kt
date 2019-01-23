@@ -17,7 +17,8 @@ import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
 import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.MovieReviewAdapter
-import com.investagram.exam.moviedb.Global.API_KEY
+import com.investagram.exam.moviedb.Global.Constants.API_KEY
+import com.investagram.exam.moviedb.Global.Variables
 import com.investagram.exam.moviedb.Global.retrofitClient
 import com.investagram.exam.moviedb.Global.setCustomActionbar
 import com.investagram.exam.moviedb.Model.ReviewResults
@@ -82,7 +83,7 @@ class MovieReview : Fragment() {
 
         override fun doInBackground(vararg params: String?): String {
             val client = retrofitClient()?.create(APIService::class.java)
-            val review : APIResponse.MovieReview? = client?.getMovieReview(movieId, API_KEY)?.execute()?.body()
+            val review : APIResponse.MovieReview? = client?.getMovieReview(movieId,API_KEY)?.execute()?.body()
 
             Log.v("MOVIE REVIEW", "SIZE: ${review?.results?.size}")
             val iterator = review?.results?.listIterator()

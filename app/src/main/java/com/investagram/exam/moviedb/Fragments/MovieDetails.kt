@@ -21,18 +21,17 @@ import android.widget.RatingBar
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Global.*
 import com.investagram.exam.moviedb.API.APIResponse
+import com.investagram.exam.moviedb.Global.Constants.API_KEY
+import com.investagram.exam.moviedb.Global.Constants.GENERIC_TITLE_POPUP
 import com.investagram.exam.moviedb.Model.Rating
 import com.investagram.exam.moviedb.Model.WatchlistMovie
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
-import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.android.synthetic.main.rating_layout.*
-import retrofit2.Retrofit
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
@@ -49,7 +48,8 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     private var mParam1: String? = null
     private var mParam2: String? = null
     private var movieId: Int = 0
-    var submittedRating : Double = 0.0
+
+
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,13 +82,12 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
-
         button_moviedetails_addtowatchlist.setOnClickListener(View.OnClickListener {
-            if(isLoggedIn) {
+            if(Variables.isLoggedIn) {
                 val watch = Watchlist()
                 watch.execute()
             } else {
-                askToLoginPopup(activity as AppCompatActivity, "OOPS", "Please login to add this movie to watchlist")
+                askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to add this movie to watchlist")
             }
         })
 
@@ -103,15 +102,15 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
         linear_moviedetails_userrating.setOnClickListener(View.OnClickListener {
 
-           if(isLoggedIn) {
+           if(Variables.isLoggedIn) {
 
                submitRating(activity as AppCompatActivity)
            } else {
-               askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to rate movie")
+               askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to rate movie")
            }
         })
 
-        if(isLoggedIn){
+        if(Variables.isLoggedIn){
             GetUserMovieRating().execute()
             linear_moviedetails_userrating.visibility = View.VISIBLE
         }
@@ -134,7 +133,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         override fun doInBackground(vararg params: String?): String {
 
             val client = retrofitClient()?.create(APIService::class.java)
-            val deleteRate : APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, SESSION_ID)?.execute()?.body()
+            val deleteRate : APIResponse.RateMovie? = client?.deleteRating(movieId, API_KEY, Variables.session_ID)?.execute()?.body()
             message = deleteRate!!.status_message!!
            return ""
         }
@@ -152,10 +151,10 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.action_home -> switchFragment(context, Home())
-            R.id.action_wathchlist ->  if(isLoggedIn) {
+            R.id.action_wathchlist ->  if(Variables.isLoggedIn) {
                 switchFragment(context, WatchlistFragment())
             } else {
-                askToLoginPopup(activity as AppCompatActivity, "OOPS!", "Please login to see you watchlist")
+                askToLoginPopup(activity as AppCompatActivity, GENERIC_TITLE_POPUP, "Please login to see you watchlist")
             }
             R.id.action_settings -> switchFragment(context, SettingsFragment())
         }
@@ -176,7 +175,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
 
             val client = retrofitClient()?.create(APIService::class.java)
             val watchlistItems  = WatchlistMovie("movie", movieId, true)
-            val watchList : APIResponse.AddWatchlist? = client?.addToWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!, watchlistItems)?.execute()?.body()
+            val watchList : APIResponse.AddWatchlist? = client?.addToWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!, watchlistItems)?.execute()?.body()
 
             return watchList!!.status_message
         }
@@ -253,13 +252,13 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         override fun doInBackground(vararg params: String?): String {
             val client = retrofitClient()?.create(APIService::class.java)
            try {
-               val state : APIResponse.AccountStateObject? = client?.getAccountStateObject(movieId,API_KEY, SESSION_ID)?.execute()?.body()
+               val state : APIResponse.AccountStateObject? = client?.getAccountStateObject(movieId,API_KEY, Variables.session_ID)?.execute()?.body()
                rate = state?.rated!!
                watchlist = state.watchlist
                isObject = true
                Log.v("MOVIE DETAIL", "RATING : ${rate.value}")
            } catch (e: Exception) {
-               val state : APIResponse.AccountStateBoolean? = client?.getAccountStateBoolean(movieId,API_KEY, SESSION_ID)?.execute()?.body()
+               val state : APIResponse.AccountStateBoolean? = client?.getAccountStateBoolean(movieId,API_KEY, Variables.session_ID)?.execute()?.body()
                isObject = state?.rated!!
                watchlist = state.watchlist
            }
@@ -322,7 +321,7 @@ class MovieDetails : Fragment(), BottomNavigationView.OnNavigationItemSelectedLi
         override fun doInBackground(vararg params: Double?): String {
             val client = retrofitClient()?.create(APIService::class.java)
             val rating = Rating(params[0]!!)
-            val submitRating : APIResponse.RateMovie? = client?.rateMovie(movieId, API_KEY, SESSION_ID, rating )?.execute()?.body()
+            val submitRating : APIResponse.RateMovie? = client?.rateMovie(movieId, API_KEY, Variables.session_ID, rating )?.execute()?.body()
             message = submitRating?.status_message
             submittedRating = params[0]!!
            return ""

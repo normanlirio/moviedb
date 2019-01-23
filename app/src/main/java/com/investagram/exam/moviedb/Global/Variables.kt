@@ -3,9 +3,13 @@ package com.investagram.exam.moviedb.Global
 /**
  * Created by Lirio on 1/20/2019.
  */
-var isLoggedIn : Boolean = false
+class Variables {
+    companion object {
 
-var SESSION_ID:String? = ""
-var ACCOUNT_ID:Int? = 0
-var USERNAME :String? = ""
-var GUEST_SESSION_ID: String? = ""
+        var isLoggedIn : Boolean = false
+
+        var session_ID:String? = ""
+        var account_ID:Int? = 0
+        var login_username :String? = ""
+    }
+}

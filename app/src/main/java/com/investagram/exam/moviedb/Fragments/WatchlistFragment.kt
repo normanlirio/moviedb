@@ -13,16 +13,14 @@ import android.util.Log
 import android.view.*
 import com.investagram.exam.moviedb.API.APIResponse
 import com.investagram.exam.moviedb.API.APIService
-import com.investagram.exam.moviedb.API.RetrofitClient
 import com.investagram.exam.moviedb.Adapters.TrendingMoviesAdapter
 import com.investagram.exam.moviedb.Global.*
+import com.investagram.exam.moviedb.Global.Constants.API_KEY
 import com.investagram.exam.moviedb.Model.Results
 
 import com.investagram.exam.moviedb.R
 import kotlinx.android.synthetic.main.bottom_navigation.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_watchlist.*
-import retrofit2.Retrofit
 
 /**
  * A simple [Fragment] subclass.
@@ -85,7 +83,7 @@ class WatchlistFragment : Fragment(), BottomNavigationView.OnNavigationItemSelec
         override fun doInBackground(vararg params: String?): String {
 
             val client = retrofitClient()?.create(APIService::class.java)
-            val items : APIResponse.TrendingMovies? = client?.getWatchlist(ACCOUNT_ID!!, API_KEY, SESSION_ID!!)?.execute()?.body()
+            val items : APIResponse.TrendingMovies? = client?.getWatchlist(Variables.account_ID!!, API_KEY, Variables.session_ID!!)?.execute()?.body()
             val iterator = items?.results?.listIterator()
 
             if (iterator != null) {

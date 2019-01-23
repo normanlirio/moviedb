@@ -6,11 +6,13 @@ import com.investagram.exam.moviedb.Model.User
 import com.investagram.exam.moviedb.Model.WatchlistMovie
 import retrofit2.Call
 import retrofit2.http.*
+import javax.inject.Inject
 
 /**
  * Created by fluxion inc on 18/01/2019.
  */
 interface APIService {
+
     @POST("/3/authentication/token/validate_with_login")
     fun login(@Query("api_key") apiKey:String, @Body user: User) : Call <APIResponse.LoginResponse>
 
