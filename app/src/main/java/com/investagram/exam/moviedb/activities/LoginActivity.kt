@@ -49,32 +49,34 @@ class LoginActivity : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg params: String?): String? {
-
             val retrofit: Retrofit? = RetrofitClient.getClient(Constants.BASE_URL)
             val login = retrofit?.create(APIService::class.java)
-            //Get Token
-            val token: APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
+            try {
+                //Get Token
+                val token: APIResponse.RequestToken? = login?.getToken(API_KEY)?.execute()?.body()
 
 
-            //Create Session with Login
-            var user = User(params[0], params[1], token?.request_token)
-            val requestToken: APIResponse.LoginResponse? = login?.login(API_KEY, user)?.execute()?.body()
-            Log.v("MAIN", "Request Token ${requestToken?.request_token}")
+                //Create Session with Login
+                val user = User(params[0], params[1], token?.request_token)
+                val requestToken: APIResponse.LoginResponse? = login?.login(API_KEY, user)?.execute()?.body()
+                Log.v("MAIN", "Request Token ${requestToken?.request_token}")
 
-            //Get Session ID
-            var map: HashMap<String, String?>? = HashMap()
-            map?.put("request_token", requestToken?.request_token)
-            val sessionId: APIResponse.GetSessionId? = login?.getSessionId(API_KEY, map)?.execute()?.body()
-            Log.v("MAIN", sessionId?.session_id)
-            Variables.session_ID = sessionId?.session_id
+                //Get Session ID
+                val map: HashMap<String, String?>? = HashMap()
+                map?.put("request_token", requestToken?.request_token)
+                val sessionId: APIResponse.GetSessionId? = login?.getSessionId(API_KEY, map)?.execute()?.body()
+                Log.v("MAIN", sessionId?.session_id)
+                Variables.session_ID = sessionId?.session_id
 
-            //Get Account details
-            val accountId = login?.getAccountDetails(API_KEY, Variables.session_ID!!)?.execute()?.body()
-            Variables.account_ID = accountId?.id
-            Variables.login_username = accountId?.username
+                //Get Account details
+                val accountId = login?.getAccountDetails(API_KEY, Variables.session_ID!!)?.execute()?.body()
+                Variables.account_ID = accountId?.id
+                Variables.login_username = accountId?.username
 
-
-            return sessionId?.session_id
+                return sessionId?.session_id
+            }catch (e: Exception) {
+                return null
+            }
         }
 
         override fun onPostExecute(result: String?) {
@@ -85,7 +87,7 @@ class LoginActivity : AppCompatActivity() {
                 setResult(10)
                 finish()
             } else {
-                Toast.makeText(this@LoginActivity, "Invalid username or password", Toast.LENGTH_SHORT)
+                Toast.makeText(this@LoginActivity, "Invalid username or password", Toast.LENGTH_SHORT).show()
             }
 
         }

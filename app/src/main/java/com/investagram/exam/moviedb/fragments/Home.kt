@@ -77,16 +77,13 @@ class Home : Fragment(), BottomNavigationView.OnNavigationItemSelectedListener {
                         val searchMovie = SearchMovies()
                         searchMovie.execute(edit_home_search.text.toString())
                     } else {
-                        Toast.makeText(activity, "Please enter a keyword", Toast.LENGTH_SHORT)
+                        Toast.makeText(activity, "Please enter a keyword", Toast.LENGTH_SHORT).show()
                     }
-
                 }
             } else {
                 notify(activity as AppCompatActivity, "OOPS!", "This app requires an internet connection")
             }
-
         }
-
         bottom_navigation.setOnNavigationItemSelectedListener(this)
     }
 

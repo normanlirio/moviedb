@@ -68,11 +68,11 @@ class SettingsFragment : Fragment(), BottomNavigationView.OnNavigationItemSelect
         if (requestCode == REQUEST_LOGIN) {
             if(resultCode == REQUEST_LOGIN) {
                 text_settings_login.text = Constants.LOGOUT
-                text_settings_username.text = "Hello, $Variables.login_username"
+                text_settings_username.text = "Hello, ${Variables.login_username}"
                 text_settings_username.visibility = View.VISIBLE
             }
         } else {
-            Toast.makeText(activity, "User cancelled", Toast.LENGTH_LONG)
+            Toast.makeText(activity, "User cancelled", Toast.LENGTH_LONG).show()
         }
     }
 
